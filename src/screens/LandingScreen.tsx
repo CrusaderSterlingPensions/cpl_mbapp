@@ -1,5 +1,5 @@
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Background, Button } from '../components';
 import { COLORS, SIZES } from '../global';
@@ -8,7 +8,7 @@ import { landingPageBackgroundImage, whiteLogo } from '../global/images';
 import { StatusBar } from 'expo-status-bar';
 import { moderateScale } from 'react-native-size-matters';
 
-const LandingScreen = () => {
+const LandingScreen = ({ navigation }: any) => {
   return (
     <View>
       <StatusBar style="light" />
@@ -23,7 +23,7 @@ const LandingScreen = () => {
           resizeMode="cover"
         >
           <LinearGradient
-            colors={[COLORS.NEUTRAL.TRANSPARENT20, COLORS.NEUTRAL.TRANSPARENT80]}
+            colors={[COLORS.NEUTRAL.TRANSPARENT20, COLORS.NEUTRAL.TRANSPARENT60]}
             style={{
               height: SIZES.height,
               width: SIZES.width,
@@ -33,7 +33,12 @@ const LandingScreen = () => {
               <View style={styles.container}>
                 <Image source={whiteLogo} style={styles.whiteLogo} />
                 <View>
-                  <Button text="Login" onPress={() => {}} />
+                  <Button
+                    text="Login"
+                    onPress={() => {
+                      navigation.navigate('Login');
+                    }}
+                  />
                   <Button
                     text="Open Pensions Account"
                     onPress={() => {}}
