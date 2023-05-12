@@ -1,0 +1,89 @@
+{
+  "profile": [
+    {
+      "accountOfficer": "TOYIN ONIBONOJE",
+      "date_of_birth": "1969-09-30",
+      "email": "aadesalu@amberglobalspace.com",
+      "employerName": "CREDIT REFERENCE COMPANY",
+      "first_name": "ADEMOLA",
+      "local_g_area": "LND",
+      "marital_status": "M",
+      "nok_firstname": "OREOLUWA",
+      "nok_surname": "ADESALU",
+      "other_name": "MUSEMILU",
+      "phone_number": "08022912713",
+      "sex": "M",
+      "state_of_origin": "LAGOS",
+      "surname": "ADESALU",
+      "t24Account": "PEN100102729422",
+      "title": "Mr",
+      "employer_rcno": "PR0000656104",
+      "c": [
+        {
+          "pin": "PEN100102729422",
+          "RSA_UNITS": 40370074.1327,
+          "AVC_UNITS": 576845.98,
+          "units_held": 40946920.1127,
+          "current_value": 73131199.321282,
+          "fund_id": 3,
+          "s": [
+            {
+              "price": 1.786,
+              "t2": [
+                {
+                  "period_1": "2023-03",
+                  "rsa_1": 263857.84,
+                  "avc_1": 150000.0,
+                  "Value_date1": "2023-04-17",
+                  "t3": [
+                    {
+                      "period_2": "2023-02",
+                      "rsa_2": 263857.86,
+                      "avc_2": 0.0,
+                      "Value_date2": "2023-03-15",
+                      "t4": [
+                        {
+                          "period_3": "2023-01",
+                          "rsa_3": 263857.86,
+                          "avc_3": 0.0,
+                          "Value_date3": "2023-03-15",
+                          "contrib_Inceptn": 49512271.61,
+                          "gainLoss": 23618927.71,
+                          "total_avc": 1030246.92028,
+                          "total_rsa": 72100952.401002,
+                          "total_With_Inceptn": 0.0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": [
+    {
+      "pin": "PEN100102729422",
+      "password": "#Pass12345"
+    },
+    {
+      "pin": "PEN100102729423",
+      "password": "#Pass12345"
+    },
+    {
+      "pin": "PEN100102729424",
+      "password": "#Pass12345"
+    },
+    {
+      "pin": "PEN100102729425",
+      "password": "#Pass12345"
+    },
+    {
+      "pin": "PEN100102729426",
+      "password": "#Pass12345"
+    }
+  ]
+}
