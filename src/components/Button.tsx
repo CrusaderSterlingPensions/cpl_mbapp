@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.NEUTRAL.TRANSPARENT,
     borderWidth: 1,
     width: SIZES.width * 0.9,
-    paddingVertical: moderateScale(15),
+    paddingVertical: moderateScale(17),
   },
 
   disabled: {
