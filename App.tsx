@@ -6,8 +6,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { store } from './src/redux/store';
 import * as SecureStore from 'expo-secure-store';
-import { useEffect, useState } from 'react';
-import LandingScreen from './src/screens/LandingScreen';
+import { useEffect, useState, useRef } from 'react';
+import { Login, LandingScreen } from './src/screens';
+import { useNavigation } from '@react-navigation/native';
+import { SplashVideo } from './src/screens';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,7 +43,7 @@ export default function App() {
             gestureDirection: 'horizontal',
             presentation: 'transparentModal',
           }}
-          initialRouteName={'LandingScreen'}
+          initialRouteName={'SplashVideo'}
         >
           {/* {isToken === null ? (
             <Stack.Group>
@@ -52,7 +54,13 @@ export default function App() {
               <Stack.Screen name="AddPropertyPgFive" component={AddPropertyPgFive} />
             </Stack.Group>
           )} */}
+          {/* <Stack.Screen
+            name="SplashVideo"
+            component={SplashVideo}
+            options={{ headerShown: false }}
+          /> */}
           <Stack.Screen name="LandingScreen" component={LandingScreen} />
+          <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
