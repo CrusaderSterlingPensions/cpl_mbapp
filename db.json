@@ -1,67 +1,47 @@
 {
-  "profile": [
+  "profileData": [
     {
-      "accountOfficer": "TOYIN ONIBONOJE",
-      "date_of_birth": "1969-09-30",
-      "email": "aadesalu@amberglobalspace.com",
-      "employerName": "CREDIT REFERENCE COMPANY",
-      "first_name": "ADEMOLA",
-      "local_g_area": "LND",
-      "marital_status": "M",
-      "nok_firstname": "OREOLUWA",
-      "nok_surname": "ADESALU",
-      "other_name": "MUSEMILU",
-      "phone_number": "08022912713",
+      "accountOfficer": "FEMI DADA",
+      "date_of_birth": "1990-04-17",
+      "email": "VICKYIGE_247@YAHOO.COM",
+      "employerName": "CRUSADERSTERLING PENSIONS LIMITED",
+      "first_name": "VICTOR",
+      "local_g_area": "RGB",
+      "marital_status": "S",
+      "nok_firstname": "OLUWATOBI",
+      "nok_surname": "IGE",
+      "other_name": "OLUWASEUN",
+      "phone_number": "08062986714",
       "sex": "M",
-      "state_of_origin": "LAGOS",
-      "surname": "ADESALU",
-      "t24Account": "PEN100102729422",
+      "state_of_origin": "OSUN",
+      "surname": "IGE",
+      "t24Account": "PEN110043917427",
       "title": "Mr",
-      "employer_rcno": "PR0000656104",
-      "c": [
-        {
-          "pin": "PEN100102729422",
-          "RSA_UNITS": 40370074.1327,
-          "AVC_UNITS": 576845.98,
-          "units_held": 40946920.1127,
-          "current_value": 73131199.321282,
-          "fund_id": 3,
-          "s": [
-            {
-              "price": 1.786,
-              "t2": [
-                {
-                  "period_1": "2023-03",
-                  "rsa_1": 263857.84,
-                  "avc_1": 150000.0,
-                  "Value_date1": "2023-04-17",
-                  "t3": [
-                    {
-                      "period_2": "2023-02",
-                      "rsa_2": 263857.86,
-                      "avc_2": 0.0,
-                      "Value_date2": "2023-03-15",
-                      "t4": [
-                        {
-                          "period_3": "2023-01",
-                          "rsa_3": 263857.86,
-                          "avc_3": 0.0,
-                          "Value_date3": "2023-03-15",
-                          "contrib_Inceptn": 49512271.61,
-                          "gainLoss": 23618927.71,
-                          "total_avc": 1030246.92028,
-                          "total_rsa": 72100952.401002,
-                          "total_With_Inceptn": 0.0
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "employer_rcno": "PR0000608988",
+      "pin": "PEN110043917427",
+      "RSA_UNITS": 167181.9498,
+      "AVC_UNITS": 0.0,
+      "units_held": 167181.9498,
+      "current_value": 1154006.844884,
+      "price": 6.9027,
+      "fund_id": 2,
+      "period_1": "2023-03",
+      "rsa_1": 41419.44,
+      "avc_1": 0.0,
+      "Value_date1": "2023-04-06",
+      "period_2": "2023-02",
+      "rsa_2": 41419.44,
+      "avc_2": 0.0,
+      "Value_date2": "2023-03-15",
+      "period_3": "2023-01",
+      "rsa_3": 37654.04,
+      "avc_3": 0.0,
+      "Value_date3": "2023-02-22",
+      "contrib_Inceptn": 1023908.83,
+      "gainLoss": 130098.01,
+      "total_avc": 0.0,
+      "total_rsa": 1154006.844884,
+      "total_With_Inceptn": 0.0
     }
   ],
   "auth": [
