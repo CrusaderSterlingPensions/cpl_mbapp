@@ -67,6 +67,7 @@ const Login = ({ navigation }: any) => {
 
   const handleLogin = async () => {
     setLoading(true);
+    navigation.navigate('DrawerMenu');
   };
 
   const OpenSocials = ({ icon, link }: any) => {
@@ -99,7 +100,7 @@ const Login = ({ navigation }: any) => {
           }}
         >
           <SafeAreaView style={styles.wrapper}>
-            <Loader loading={isLoading} />
+            {/* <Loader loading={isLoading} /> */}
             <BackButton onPress={() => navigation.goBack()} label="Back" />
             <View style={styles.container}>
               <View style={styles.upperSection}>
@@ -162,7 +163,12 @@ const Login = ({ navigation }: any) => {
                   </Text>
                   <Line />
                 </View>
-                <TextLinks label="Open Pension Account" onPress={() => {}} />
+                <TextLinks
+                  label="Open Pension Account"
+                  onPress={() => {
+                    navigation.replace('OpenAccount');
+                  }}
+                />
                 <View style={styles.socials}>
                   <OpenSocials
                     icon={<FontAwesome5 name="facebook" size={24} color={COLORS.NEUTRAL.WHITE} />}
