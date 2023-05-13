@@ -107,7 +107,7 @@ const OpenAccount = ({ navigation }: any) => {
           <KeyboardAvoidingView behavior="height">
             <SafeAreaView style={styles.wrapper}>
               <Loader loading={isLoading} />
-              <BackButton onPress={() => navigation.goBack()} label="Back" />
+              <BackButton onPress={() => navigation.goBack()} label="Back" color="white" />
               <View style={styles.container}>
                 <View style={styles.upperSection}>
                   <Logo

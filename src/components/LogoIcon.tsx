@@ -34,7 +34,7 @@ export const ProfileImage = ({ profile, onPress }: profileImageProps) => {
     <TouchableOpacity style={styles.profileImageWrapper} activeOpacity={0.5} onPress={onPress}>
       <UserAvatar
         size={normalize(40)}
-        name={'IGE VICTOR'}
+        name={profile?.first_name + ' ' + profile?.surname}
         bgColor={COLORS.PRIMARY.NORMAL}
         style={{
           alignItems: 'center',

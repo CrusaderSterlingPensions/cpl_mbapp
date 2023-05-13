@@ -13,8 +13,9 @@ type backButtonProps = {
 const BackButton = ({ label, color, onPress }: backButtonProps) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
-      <Ionicons name="arrow-back" size={24} color={color || COLORS.NEUTRAL.WHITE} />
-      <Text style={styles.label}>{label}</Text>
+      <Ionicons name="caret-back" size={24} color={color || COLORS.NEUTRAL.WHITE} />
+
+      <Text style={[styles.label, { color: color }]}>{label}</Text>
     </TouchableOpacity>
   );
 };

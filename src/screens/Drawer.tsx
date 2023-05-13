@@ -33,27 +33,35 @@ import LogoRed from '../components/LogoIcon';
 import DataRecapture from './DataRecapture';
 import PrivacyPolicy from './PrivacyPolicy';
 import MandateChange from './MandateChange';
+import { data } from '../global';
+import { StatusBar } from 'expo-status-bar';
 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawer = (props: any) => {
-  const TopDrawerContent = () => {
-    View;
-  };
+  const profile = props.data;
 
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView style={styles.drawerContainer}>
         <View style={styles.profileContainer}>
           <View style={styles.header}>
-            <ProfileImage />
+            <ProfileImage
+              profile={profile}
+              onPress={() => props.navigation.navigate('Profile', { data: profile })}
+            />
             <View style={styles.nameEmailWrapper}>
-              <Text style={styles.drawerProfileName}>Mr IGE VICTOR</Text>
-              <Text style={styles.drawerProfileEmail}>VICKYIGE_247@YAHOO.COM</Text>
+              <Text
+                style={styles.drawerProfileName}
+              >{`${profile?.title?.toUpperCase()}  ${profile?.surname?.toUpperCase()}  ${profile?.first_name?.toUpperCase()}`}</Text>
+              <Text style={styles.drawerProfileEmail}>{profile?.email?.toLowerCase()}</Text>
               <Text style={styles.drawerProfilePIN}>PEN110043917427</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.viewProfileWrapper}>
+          <TouchableOpacity
+            style={styles.viewProfileWrapper}
+            onPress={() => props.navigation.navigate('Profile', { data: profile })}
+          >
             <Text style={styles.viewProfileText}>View Profile</Text>
           </TouchableOpacity>
         </View>
@@ -88,19 +96,24 @@ const CustomDrawer = (props: any) => {
   );
 };
 
-const DrawerMenu = () => {
+const DrawerMenu = ({ navigation }: any) => {
+  const { profile } = data;
+  const profileData = profile[0];
   // const { profile } = useSelector(userSelector);
   return (
     <Drawer.Navigator
-      drawerContent={(props) => <CustomDrawer {...props} />}
+      drawerContent={(props) => <CustomDrawer {...props} data={profileData} />}
       screenOptions={({ navigation }) => ({
         headerTitle: () => {
           return (
             <View
               style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
             >
-              <Text style={{ ...FONTS.body2Bold, marginBottom: 5 }}>Hi, Mr IGE</Text>
-              <Text>PEN100183781273</Text>
+              <StatusBar style="auto" translucent />
+              <Text
+                style={{ ...FONTS.body2Bold, marginBottom: 5 }}
+              >{`Hi, ${profileData?.title?.toUpperCase()} ${profileData?.surname?.toUpperCase()}`}</Text>
+              <Text>{profileData?.pin}</Text>
             </View>
           );
         }, //Put name

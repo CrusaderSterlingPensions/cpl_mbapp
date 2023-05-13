@@ -8,6 +8,7 @@ import { Balances, History, Prices } from './fragments';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCurrentUser } from '../redux/userSlice';
 import { data } from '../global';
+import { StatusBar } from 'expo-status-bar';
 
 const DashBoard = () => {
   const dispatch: any = useDispatch();
@@ -20,6 +21,7 @@ const DashBoard = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar style="auto" translucent />
       <Balances profile={profileData} />
       <Prices profile={profileData} />
       <History profile={profileData} />

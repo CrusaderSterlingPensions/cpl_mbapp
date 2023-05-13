@@ -7,6 +7,7 @@ const menuIconDark = require('../assets/images/drawer_icon_3.png');
 const logoRoundRed = require('../assets/images/logo_round_red.png');
 const nairaLogoWhite = require('../assets/images/naira_logo.png');
 const nairaLogoBlack = require('../assets/images/naira_logo_black.png');
+const profileBackground = require('../assets/images/background.jpg');
 
 export {
   landingPageBackgroundImage,
@@ -18,4 +19,5 @@ export {
   logoRoundRed,
   nairaLogoWhite,
   nairaLogoBlack,
+  profileBackground,
 };

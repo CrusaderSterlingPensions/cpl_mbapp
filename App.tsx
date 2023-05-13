@@ -7,7 +7,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { store } from './src/redux/store';
 import * as SecureStore from 'expo-secure-store';
 import { useEffect, useState, useRef } from 'react';
-import { Login, LandingScreen, OpenAccount, DrawerMenu } from './src/screens';
+import { Login, LandingScreen, OpenAccount, DrawerMenu, Profile } from './src/screens';
 import { useNavigation } from '@react-navigation/native';
 import { SplashVideo } from './src/screens';
 
@@ -63,6 +63,7 @@ export default function App() {
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="OpenAccount" component={OpenAccount} />
           <Stack.Screen name="DrawerMenu" component={DrawerMenu} />
+          <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

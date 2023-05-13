@@ -11,6 +11,7 @@ import FundTransfer from './FundTransfer';
 import DataRecapture from './DataRecapture';
 import Calculator from './Calculator';
 import DrawerMenu from './Drawer';
+import Profile from './Profile';
 
 export {
   LandingScreen,
@@ -26,4 +27,5 @@ export {
   DataRecapture,
   Calculator,
   DrawerMenu,
+  Profile,
 };
