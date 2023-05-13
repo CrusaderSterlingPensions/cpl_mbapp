@@ -7,6 +7,8 @@ import Logo from './Logo';
 import CustomInput, { DropDownInput } from './CustomInput';
 import Line from './Line';
 import TextLinks from './TextLinks';
+import { ProfileImage, MenuIcon } from './LogoIcon';
+import LogoRed from './LogoIcon';
 
 export {
   Button,
@@ -19,4 +21,6 @@ export {
   DropDownInput,
   Line,
   TextLinks,
+  ProfileImage,
+  MenuIcon,
 };
