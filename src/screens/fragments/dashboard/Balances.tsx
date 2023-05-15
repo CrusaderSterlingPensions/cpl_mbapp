@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.PRIMARY.NORMAL,
     height: 137,
     width: SIZES.width * 0.78,
-    marginTop: verticalScale(20),
+    marginTop: verticalScale(10),
     marginHorizontal: moderateScale(5),
     borderRadius: moderateScale(10),
     flexDirection: 'column',

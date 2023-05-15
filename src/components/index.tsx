@@ -9,6 +9,9 @@ import Line from './Line';
 import TextLinks from './TextLinks';
 import { ProfileImage, MenuIcon } from './LogoIcon';
 import LogoRed from './LogoIcon';
+import { DatePicker } from './CustomInput';
+import ModalScreen from './ModalScreen';
+import PasswordInstructions from './PasswordInstructions';
 
 export {
   Button,
@@ -23,4 +26,8 @@ export {
   TextLinks,
   ProfileImage,
   MenuIcon,
+  DatePicker,
+  LogoRed,
+  ModalScreen,
+  PasswordInstructions,
 };

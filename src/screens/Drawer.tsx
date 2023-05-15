@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, Linking } from 'react-native';
 import React, { useState, useEffect } from 'react';
 
 import {
@@ -38,8 +38,42 @@ import { StatusBar } from 'expo-status-bar';
 
 const Drawer = createDrawerNavigator();
 
+//https://bentracker.crusaderpensions.com/recapweb/
+//https://www.crusaderpensions.com/data-privacy-policy/"
+
 const CustomDrawer = (props: any) => {
   const profile = props.data;
+
+  const OpenLink = ({ label, link }: any) => {
+    const handleOpenLink = async (url: any) => {
+      try {
+        await Linking.openURL(url);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    return (
+      <TouchableOpacity
+        style={{
+          backgroundColor: COLORS.NEUTRAL.ACCENT,
+          borderRadius: moderateScale(3),
+          marginHorizontal: moderateScale(15),
+        }}
+        onPress={() => handleOpenLink(link)}
+      >
+        <Text
+          style={{
+            color: COLORS.NEUTRAL.WHITE,
+            ...FONTS.body3Bold,
+            paddingVertical: moderateScale(12),
+            paddingLeft: moderateScale(22),
+          }}
+        >
+          {label}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -66,13 +100,34 @@ const CustomDrawer = (props: any) => {
           </TouchableOpacity>
         </View>
 
-        {/* <View style={styles.searchBoxWrapper}>Hello</View> */}
         <DrawerItemList {...props} />
+        <View
+          style={{
+            flexDirection: 'column',
+            gap: moderateScale(8),
+            justifyContent: 'center',
+            marginVertical: moderateScale(20),
+          }}
+        >
+          <OpenLink
+            label={'Data Recapture'}
+            link={'https://bentracker.crusaderpensions.com/recapweb/'}
+          />
+          <OpenLink
+            label={'Privacy Policy'}
+            link={'https://www.crusaderpensions.com/data-privacy-policy/'}
+          />
+          <OpenLink
+            label={'Mandate Change'}
+            link={'https://www.crusaderpensions.com/data-privacy-policy/'}
+          />
+        </View>
       </DrawerContentScrollView>
+
       <DrawerItem
         label={'Sign Out'}
         onPress={() => {
-          // props.navigation.navigate('LogoutModal');
+          props.navigation.navigate('LogoutModal');
         }}
         style={{
           width: '100%',
@@ -90,7 +145,7 @@ const CustomDrawer = (props: any) => {
           color: COLORS.NEUTRAL.DARK,
           ...FONTS.body3Medium,
         }}
-        icon={() => <SimpleLineIcons name="logout" size={24} color={COLORS.NEUTRAL.DARK} />}
+        icon={() => <MaterialIcons name="logout" size={24} color={COLORS.NEUTRAL.DARK} />}
       />
     </View>
   );
@@ -99,24 +154,27 @@ const CustomDrawer = (props: any) => {
 const DrawerMenu = ({ navigation }: any) => {
   const { profile } = data;
   const profileData = profile[0];
+  const HeaderTitle = (props?: any) => {
+    const { title, subTitle, customTitleStyle } = props;
+    return (
+      <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <StatusBar style="auto" translucent />
+        <Text style={{ ...FONTS.body2Bold, marginBottom: 5, ...customTitleStyle }}>{title}</Text>
+        {subTitle && <Text>{subTitle}</Text>}
+      </View>
+    );
+  };
   // const { profile } = useSelector(userSelector);
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawer {...props} data={profileData} />}
       screenOptions={({ navigation }) => ({
-        headerTitle: () => {
-          return (
-            <View
-              style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
-            >
-              <StatusBar style="auto" translucent />
-              <Text
-                style={{ ...FONTS.body2Bold, marginBottom: 5 }}
-              >{`Hi, ${profileData?.title?.toUpperCase()} ${profileData?.surname?.toUpperCase()}`}</Text>
-              <Text>{profileData?.pin}</Text>
-            </View>
-          );
-        }, //Put name
+        headerTitle: () => (
+          <HeaderTitle
+            title={`Hi, ${profileData?.title?.toUpperCase()} ${profileData?.surname?.toUpperCase()}`}
+            subTitle={profileData?.pin}
+          />
+        ),
         headerStyle: {
           height: 120,
           backgroundColor: COLORS.NEUTRAL.WHITE,
@@ -140,17 +198,17 @@ const DrawerMenu = ({ navigation }: any) => {
         headerShown: true,
         drawerLabelStyle: styles.drawerLabelStyle,
         drawerItemStyle: styles.drawerItemStyle,
-        drawerActiveBackgroundColor: COLORS.PRIMARY.LIGHT,
+        drawerActiveBackgroundColor: COLORS.NEUTRAL.LIGHT_HOVER,
         drawerInactiveBackgroundColor: COLORS.NEUTRAL.TRANSPARENT,
       })}
     >
       <Drawer.Screen
-        name={'Dashboard'}
+        name={'DashBoard'}
         options={{
           title: `Dashboard`,
           drawerIcon: () => (
-            <FontAwesome
-              name="bank"
+            <MaterialIcons
+              name="dashboard"
               size={24}
               color={COLORS.NEUTRAL.DARK}
               style={{ marginLeft: 10 }}
@@ -165,20 +223,23 @@ const DrawerMenu = ({ navigation }: any) => {
           title: 'Statement Request',
           headerShown: true,
           drawerIcon: () => (
-            <AntDesign
-              name="adduser"
+            <MaterialIcons
+              name="account-balance-wallet"
               size={24}
               color={COLORS.NEUTRAL.DARK}
               style={{ marginLeft: 10 }}
             />
           ),
+          headerTitle: () => (
+            <HeaderTitle title="Statement Request" customTitleStyle={{ ...FONTS.body3Bold }} />
+          ),
         }}
         component={StatementRequest}
       />
       <Drawer.Screen
-        name={'Calculator'}
+        name={'FundTransfer'}
         options={{
-          title: 'Funds Movements',
+          title: 'Funds Movement',
           headerShown: true,
           drawerIcon: () => (
             <Feather
@@ -187,6 +248,9 @@ const DrawerMenu = ({ navigation }: any) => {
               color={COLORS.NEUTRAL.DARK}
               style={{ marginLeft: 10 }}
             />
+          ),
+          headerTitle: () => (
+            <HeaderTitle title="Fund Movement" customTitleStyle={{ ...FONTS.body3Bold }} />
           ),
         }}
         component={FundTransfer}
@@ -197,17 +261,21 @@ const DrawerMenu = ({ navigation }: any) => {
           title: 'Branch Locator',
           headerShown: true,
           drawerIcon: () => (
-            <MaterialCommunityIcons
-              name="file-percent-outline"
+            <FontAwesome5
+              name="location-arrow"
               size={24}
               color={COLORS.NEUTRAL.DARK}
               style={{ marginLeft: 10 }}
             />
           ),
+          headerTitle: () => (
+            <HeaderTitle title="Branch Locator" customTitleStyle={{ ...FONTS.body3Bold }} />
+          ),
+          headerStyle: { backgroundColor: COLORS.NEUTRAL.LIGHT, height: 120 },
         }}
         component={BranchLocator}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name={'BenefitApplication'}
         options={{
           title: 'Benefit Application',
@@ -220,85 +288,30 @@ const DrawerMenu = ({ navigation }: any) => {
               style={{ marginLeft: 10 }}
             />
           ),
+          headerTitle: () => (
+            <HeaderTitle title="Benefit Application" customTitleStyle={{ ...FONTS.body3Bold }} />
+          ),
         }}
         component={BenefitApplication}
-      />
+      /> */}
       <Drawer.Screen
         name={'ProductCatalogue'}
         options={{
           title: 'Product Catalogue',
           headerShown: true,
           drawerIcon: () => (
-            <Feather
-              name="settings"
+            <SimpleLineIcons
+              name="graph"
               size={24}
               color={COLORS.NEUTRAL.DARK}
               style={{ marginLeft: 10 }}
             />
           ),
+          headerTitle: () => (
+            <HeaderTitle title="Product Catalogue" customTitleStyle={{ ...FONTS.body3Bold }} />
+          ),
         }}
         component={ProductCatalogue}
-      />
-      <Drawer.Screen
-        name="DataRecapture"
-        options={{
-          title: 'Data Recapture',
-          headerShown: true,
-
-          drawerActiveBackgroundColor: COLORS.NEUTRAL.WHITE,
-          drawerItemStyle: {
-            width: '90%',
-            backgroundColor: COLORS.NEUTRAL.ACCENT,
-            marginTop: moderateScale(10),
-          },
-          drawerActiveTintColor: COLORS.NEUTRAL.WHITE,
-          drawerInactiveTintColor: COLORS.NEUTRAL.WHITE,
-          drawerLabelStyle: {
-            color: COLORS.NEUTRAL.WHITE,
-            marginLeft: moderateScale(20),
-          },
-        }}
-        component={DataRecapture}
-      />
-      <Drawer.Screen
-        name="PrivacyPolicy"
-        options={{
-          title: 'Privacy Policy',
-          headerShown: true,
-
-          drawerActiveBackgroundColor: COLORS.NEUTRAL.WHITE,
-          drawerItemStyle: {
-            width: '90%',
-            backgroundColor: COLORS.NEUTRAL.ACCENT,
-          },
-          drawerActiveTintColor: COLORS.NEUTRAL.WHITE,
-          drawerInactiveTintColor: COLORS.NEUTRAL.WHITE,
-          drawerLabelStyle: {
-            color: COLORS.NEUTRAL.WHITE,
-            marginLeft: moderateScale(20),
-          },
-        }}
-        component={PrivacyPolicy}
-      />
-      <Drawer.Screen
-        name="MandateChange"
-        options={{
-          title: 'Mandate Change',
-          headerShown: true,
-
-          drawerActiveBackgroundColor: COLORS.NEUTRAL.WHITE,
-          drawerItemStyle: {
-            width: '90%',
-            backgroundColor: COLORS.NEUTRAL.ACCENT,
-          },
-          drawerActiveTintColor: COLORS.NEUTRAL.WHITE,
-          drawerInactiveTintColor: COLORS.NEUTRAL.WHITE,
-          drawerLabelStyle: {
-            color: COLORS.NEUTRAL.WHITE,
-            marginLeft: moderateScale(20),
-          },
-        }}
-        component={MandateChange}
       />
     </Drawer.Navigator>
   );

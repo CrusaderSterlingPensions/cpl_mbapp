@@ -56,8 +56,9 @@ const LandingScreen = ({ navigation, onFinish }: any) => {
             ref={videoRef}
             source={require('../assets/videos/video_bk.mp4')}
             useNativeControls
-            resizeMode="cover"
             shouldPlay
+            volume={0}
+            resizeMode="cover"
             isLooping
             isMuted={true}
             onPlaybackStatusUpdate={(status) => {

@@ -8,6 +8,10 @@ const logoRoundRed = require('../assets/images/logo_round_red.png');
 const nairaLogoWhite = require('../assets/images/naira_logo.png');
 const nairaLogoBlack = require('../assets/images/naira_logo_black.png');
 const profileBackground = require('../assets/images/background.jpg');
+const avcBanner = require('../assets/images/avc.jpg');
+const rsaBanner = require('../assets/images/rsa.jpg');
+const raBanner = require('../assets/images/ra.jpg');
+const glfBanner = require('../assets/images/glf.jpg');
 
 export {
   landingPageBackgroundImage,
@@ -20,4 +24,8 @@ export {
   nairaLogoWhite,
   nairaLogoBlack,
   profileBackground,
+  avcBanner,
+  raBanner,
+  glfBanner,
+  rsaBanner,
 };

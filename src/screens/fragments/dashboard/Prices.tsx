@@ -37,8 +37,7 @@ export default Prices;
 const styles = StyleSheet.create({
   priceData: {
     marginHorizontal: moderateScale(5),
-    marginTop: moderateScale(10),
-    marginBottom: moderateScale(20),
+    marginBottom: moderateScale(15),
   },
   prevailingPriceText: {
     ...FONTS.body4Medium,

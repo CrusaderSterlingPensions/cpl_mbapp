@@ -85,6 +85,7 @@ const Login = ({ navigation }: any) => {
     <View
       style={{
         height: SIZES.height,
+        backgroundColor: 'white',
       }}
     >
       <ImageBackground
@@ -101,7 +102,7 @@ const Login = ({ navigation }: any) => {
         >
           <SafeAreaView style={styles.wrapper}>
             {/* <Loader loading={isLoading} /> */}
-            <BackButton onPress={() => navigation.goBack()} label="Back" color="white" />
+            {/* <BackButton onPress={() => navigation.goBack()} label="Back" color="white" /> */}
             <View style={styles.container}>
               <View style={styles.upperSection}>
                 <Logo
@@ -208,13 +209,13 @@ const styles = StyleSheet.create({
   },
   container: {
     width: SIZES.width,
-    paddingVertical: verticalScale(20),
     paddingHorizontal: verticalScale(25),
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: '95%',
+    height: '100%',
     paddingBottom: verticalScale(30),
+    paddingTop: verticalScale(40),
   },
   customStyle: {
     marginTop: 20,

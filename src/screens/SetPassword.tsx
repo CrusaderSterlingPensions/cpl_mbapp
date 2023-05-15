@@ -21,6 +21,7 @@ import {
   Loader,
   Logo,
   ModalScreen,
+  PasswordInstructions,
   TextLinks,
 } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +34,7 @@ import {
 import { FontAwesome5, Entypo, EvilIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 
-const OpenAccount = ({ navigation }: any) => {
+const SetPassword = ({ navigation }: any) => {
   type errorObjProps = {
     [key: string]: string;
   };
@@ -47,6 +48,7 @@ const OpenAccount = ({ navigation }: any) => {
   const [pinValue, setPinValue] = useState<string>('');
   const [errors, setErrors] = useState<errorObjProps>({});
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [isChecked, setChecked] = useState<boolean>(false);
   const [timerError, setTimerError] = useState<boolean>(false);
   const [firstName, setFirstName] = useState<string>('');
@@ -66,20 +68,16 @@ const OpenAccount = ({ navigation }: any) => {
   const validate = async () => {
     Keyboard.dismiss();
     try {
-      if (emailRegex.test(email) && pinValue && phoneNumber) {
-        handleLogin();
+      if (passwordRegex.test(password) && password === confirmPassword) {
+        handleSetPassword();
         setLoading(true);
       }
-      if (!email || !emailRegex.test(email)) {
-        handleError('Please Provide a Valid Email Address', 'email');
+      if (!password) {
+        handleError('Password Field cannot be Empty', 'password');
         setIsValid(false);
       }
-      if (!phoneNumber || !phoneNumberRegex.test(phoneNumber)) {
-        handleError('Please provide a Valid Phone Number', 'phoneNumber');
-        setIsValid(false);
-      }
-      if (!pinValue) {
-        handleError('Please provide a Valid PIN', 'pinValue');
+      if (confirmPassword !== password) {
+        handleError('Confirm Your Password', 'confirmPassword');
         setIsValid(false);
       }
     } catch (error) {
@@ -91,7 +89,7 @@ const OpenAccount = ({ navigation }: any) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
 
-  const handleLogin = async () => {
+  const handleSetPassword = async () => {
     setModalOTPSuccessVisible(true);
   };
 
@@ -117,15 +115,15 @@ const OpenAccount = ({ navigation }: any) => {
           <KeyboardAvoidingView behavior="height">
             <SafeAreaView style={styles.wrapper}>
               <ModalScreen
-                titleLabel={'OTP sent successfully '}
-                message={'Enter the verification code sent to your email address.'}
+                titleLabel={'Password Set Successfully '}
+                message={'Proceed to Login to Access your Account'}
                 modalVisible={modalOTPSuccessVisible}
                 setModalVisible={setModalOTPSuccessVisible}
                 buttonLabelTwo={'Proceed'}
                 buttonOneOnPress={() => {}}
                 buttonTwoOnPress={() => {
                   setLoading(false);
-                  navigation.navigate('VerifyOTP');
+                  navigation.navigate('Login');
                   setModalOTPSuccessVisible(!modalOTPSuccessVisible);
                 }}
               />
@@ -142,49 +140,34 @@ const OpenAccount = ({ navigation }: any) => {
                     containerStyle={styles.logoContainerStyle}
                   />
 
-                  <Text style={styles.title}>Quick Sign Up </Text>
+                  <Text style={styles.title}> Set up Password </Text>
 
                   <CustomInput
-                    placeholder={'PIN'}
-                    onChangeText={(text: string) => setPinValue(text)}
+                    placeholder={'Set Password'}
+                    onChangeText={(text: string) => setPassword(text)}
                     autoCapitalize="none"
-                    onFocus={() => handleError(null, 'pinValue')}
-                    error={errors.pinValue}
+                    onFocus={() => handleError(null, 'password')}
+                    error={errors.password}
                     editable={true}
+                    password={true}
                   />
                   <CustomInput
-                    placeholder={'Email'}
-                    onChangeText={(text: string) => setEmail(text)}
+                    placeholder={'Confirm Password'}
+                    onChangeText={(text: string) => setConfirmPassword(text)}
                     autoCapitalize="none"
-                    onFocus={() => handleError(null, 'email')}
-                    error={errors.email}
+                    onFocus={() => handleError(null, 'confirmPassword')}
+                    error={errors.confirmPassword}
                     editable={true}
+                    password={true}
                   />
-                  <CustomInput
-                    placeholder={'Phone Number'}
-                    onChangeText={(text: string) => setPhoneNumber(text)}
-                    autoCapitalize="none"
-                    onFocus={() => handleError(null, 'phoneNumber')}
-                    error={errors.phoneNumber}
-                    editable={true}
-                  />
+
+                  {!passwordRegex.test(password) && <PasswordInstructions />}
 
                   <Button
                     onPress={() => validate()}
-                    text={'Sign Up'}
+                    text={'Submit'}
                     customTextStyle={styles.btnTextStyle}
                     customBtnStyle={styles.customBtnStyle}
-                  />
-
-                  <TextLinks
-                    label="Already Have an Account? Log In"
-                    onPress={() => {
-                      navigation.replace('Login');
-                    }}
-                    linkContainerStyles={{
-                      justifyContent: 'center',
-                      marginTop: moderateScale(20),
-                    }}
                   />
                 </View>
               </View>
@@ -196,7 +179,7 @@ const OpenAccount = ({ navigation }: any) => {
   );
 };
 
-export default OpenAccount;
+export default SetPassword;
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -231,8 +214,10 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLORS.NEUTRAL.WHITE,
-    ...FONTS.body3Medium,
+    ...FONTS.body3Bold,
     marginBottom: verticalScale(10),
+    fontSize: moderateScale(15),
+    textAlign: 'center',
   },
   socials: {
     marginTop: verticalScale(10),

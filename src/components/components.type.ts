@@ -42,6 +42,7 @@ export type customInputProps = {
   editable?: boolean;
   autoComplete?: any;
   contextMenuHidden?: boolean;
+  labelStyle?: any;
   [key: string]: any;
 };
 

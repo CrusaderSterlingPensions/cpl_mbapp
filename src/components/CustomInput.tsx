@@ -4,7 +4,7 @@ import { normalize, SIZES, COLORS, FONTS } from '../global';
 import { moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import { FontAwesome, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import moment from 'moment';
-// import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Dropdown } from 'react-native-element-dropdown';
 import { customInputProps, dropDownInputProps } from './components.type';
 
@@ -40,72 +40,83 @@ export const DropDownInput = ({
   );
 };
 
-// export const DatePicker = ({
-//   date,
-//   setDate,
-//   showDatePicker,
-//   setShowDatePicker,
-//   dateValue,
-//   setDateValue,
-//   label,
-//   error,
-// }: any) => {
-//   return (
-//     <View
-//       style={
-//         Platform.OS === 'ios'
-//           ? {
-//               marginTop: verticalScale(20),
-//               flexDirection: 'row',
-//               justifyContent: 'space-between',
-//               alignItems: 'center',
-//             }
-//           : { marginTop: verticalScale(20) }
-//       }
-//     >
-//       {label && <Text style={{ ...FONTS.body3Regular, marginBottom: scale(5) }}>{label}</Text>}
-//       {Platform.OS === 'android' && (
-//         <TouchableOpacity
-//           style={
-//             date
-//               ? { ...styles.containerSec }
-//               : { ...styles.containerSec, borderColor: COLORS.ERROR.NORMAL }
-//           }
-//           onPress={() => setShowDatePicker(true)}
-//         >
-//           <TextInput editable={false} placeholder={'DD/MM/YYYY'} value={dateValue} />
-//         </TouchableOpacity>
-//       )}
-//       {Platform.OS === 'android' ? (
-//         showDatePicker && (
-//           <DateTimePicker
-//             mode="date"
-//             display="default"
-//             onChange={(event, value) => {
-//               setShowDatePicker(!showDatePicker);
-//               setDate(value);
-//               setDateValue(moment(value).format('DD/MM/YYYY'));
-//             }}
-//             value={date}
-//             maximumDate={new Date()}
-//           />
-//         )
-//       ) : (
-//         <DateTimePicker
-//           mode="date"
-//           display="default"
-//           onChange={(event, value) => {
-//             setShowDatePicker(!showDatePicker);
-//             setDate(value);
-//             setDateValue(moment(value).format('DD/MM/YYYY'));
-//           }}
-//           value={date}
-//           maximumDate={new Date()}
-//         />
-//       )}
-//     </View>
-//   );
-// };
+export const DatePicker = ({
+  date,
+  setDate,
+  showDatePicker,
+  setShowDatePicker,
+  dateValue,
+  setDateValue,
+  label,
+  error,
+}: any) => {
+  return (
+    <View
+      style={
+        Platform.OS === 'ios'
+          ? {
+              marginTop: verticalScale(20),
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }
+          : {
+              marginTop: verticalScale(20),
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }
+      }
+    >
+      {label && <Text style={{ ...FONTS.body3Regular, marginBottom: scale(5) }}>{label}</Text>}
+      {Platform.OS === 'android' && (
+        <TouchableOpacity
+          style={
+            date
+              ? {
+                  ...styles.containerSec,
+                  width: 'auto',
+                  justifyContent: 'center',
+                  borderColor: COLORS.NEUTRAL.NORMAL,
+                  backgroundColor: COLORS.NEUTRAL.LIGHT,
+                }
+              : { ...styles.containerSec, width: 'auto', borderColor: COLORS.ERROR.NORMAL }
+          }
+          onPress={() => setShowDatePicker(true)}
+        >
+          <TextInput editable={false} placeholder={'DD/MM/YYYY'} value={dateValue} />
+        </TouchableOpacity>
+      )}
+      {Platform.OS === 'android' ? (
+        showDatePicker && (
+          <DateTimePicker
+            mode="date"
+            display="default"
+            onChange={(event, value) => {
+              setShowDatePicker(!showDatePicker);
+              setDate(value);
+              setDateValue(moment(value).format('DD/MM/YYYY'));
+            }}
+            value={date}
+            maximumDate={new Date()}
+          />
+        )
+      ) : (
+        <DateTimePicker
+          mode="date"
+          display="default"
+          onChange={(event, value) => {
+            setShowDatePicker(!showDatePicker);
+            setDate(value);
+            setDateValue(moment(value).format('DD/MM/YYYY'));
+          }}
+          value={date}
+          maximumDate={new Date()}
+        />
+      )}
+    </View>
+  );
+};
 
 const CustomInput = ({
   password,
@@ -124,7 +135,9 @@ const CustomInput = ({
   value,
   onFocus = () => {},
   containerStyle,
+  labelStyle,
   contextMenuHidden,
+  customTextStyle,
   editable,
   ...props
 }: customInputProps) => {
@@ -146,7 +159,7 @@ const CustomInput = ({
           : `${label} ${!editable ? ': Disabled!' : ''}`
       }
     >
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && <Text style={{ ...styles.label, ...labelStyle }}>{label}</Text>}
       {desc && <Text style={styles.desc}>{desc}</Text>}
       <View
         style={[
@@ -163,9 +176,13 @@ const CustomInput = ({
         <TextInput
           multiline={multiline}
           numberOfLines={numberOfLines}
-          style={styles.inputSec}
+          style={
+            multiline
+              ? { ...styles.inputSec, height: moderateScale(100), ...customTextStyle }
+              : { ...styles.inputSec, ...customTextStyle }
+          }
           placeholder={placeholder}
-          placeholderTextColor={COLORS.NEUTRAL.WHITE}
+          placeholderTextColor={props.dark ? COLORS.NEUTRAL.DARK : COLORS.NEUTRAL.WHITE}
           secureTextEntry={(password || confirmPassword) && isShown ? true : false}
           autoCorrect={false}
           autoComplete={autoComplete}
@@ -212,7 +229,6 @@ const styles = StyleSheet.create({
   containerSec: {
     width: '100%',
     backgroundColor: COLORS.NEUTRAL.TRANSPARENT_WHITE20,
-    height: verticalScale(40),
     paddingLeft: scale(10),
     paddingRight: scale(30),
     borderRadius: moderateScale(8),

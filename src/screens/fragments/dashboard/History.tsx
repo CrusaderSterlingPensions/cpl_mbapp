@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: moderateScale(5),
     flexDirection: 'column',
-    gap: moderateScale(20),
+    gap: moderateScale(10),
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: moderateScale(20),

@@ -12,6 +12,9 @@ import DataRecapture from './DataRecapture';
 import Calculator from './Calculator';
 import DrawerMenu from './Drawer';
 import Profile from './Profile';
+import LogoutModal from './LogoutModal';
+import VerifyOTP from './VerifyOTP';
+import SetPassword from './SetPassword';
 
 export {
   LandingScreen,
@@ -28,4 +31,7 @@ export {
   Calculator,
   DrawerMenu,
   Profile,
+  LogoutModal,
+  VerifyOTP,
+  SetPassword,
 };

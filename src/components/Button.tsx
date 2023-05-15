@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.NEUTRAL.TRANSPARENT,
     borderWidth: 1,
     width: SIZES.width * 0.9,
-    paddingVertical: moderateScale(17),
+    paddingVertical: moderateScale(14),
   },
 
   disabled: {
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
 
   btnText: {
-    ...FONTS.body4Bold,
+    ...FONTS.body3Bold,
     color: COLORS.NEUTRAL.WHITE,
   },
 });

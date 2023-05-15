@@ -32,8 +32,9 @@ import {
 } from '../global/images';
 import { FontAwesome5, Entypo, EvilIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { color } from 'react-native-reanimated';
 
-const OpenAccount = ({ navigation }: any) => {
+const VerifyOTP = ({ navigation }: any) => {
   type errorObjProps = {
     [key: string]: string;
   };
@@ -44,16 +45,11 @@ const OpenAccount = ({ navigation }: any) => {
 
   const [isValid, setIsValid] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [pinValue, setPinValue] = useState<string>('');
+  const [otpValue, setOtpValue] = useState<string>('');
   const [errors, setErrors] = useState<errorObjProps>({});
-  const [password, setPassword] = useState<string>('');
-  const [isChecked, setChecked] = useState<boolean>(false);
-  const [timerError, setTimerError] = useState<boolean>(false);
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
+  const [modalErrVisible, setModalErrVisible] = useState<boolean>(false);
   const [modalOTPSuccessVisible, setModalOTPSuccessVisible] = useState<boolean>(false);
+  const [backConfirmModalVisible, setBackConfirmModalVisible] = useState<boolean>(false);
 
   const phoneNumberRegex = /^0\d{10}$/;
   const emailRegex = /\S+@\S+\.\S+/;
@@ -61,25 +57,14 @@ const OpenAccount = ({ navigation }: any) => {
 
   useEffect(() => {}, []);
 
-  console.log(phoneNumberRegex.test(phoneNumber), phoneNumber);
-
   const validate = async () => {
     Keyboard.dismiss();
     try {
-      if (emailRegex.test(email) && pinValue && phoneNumber) {
-        handleLogin();
-        setLoading(true);
+      if (emailRegex) {
+        handleVerifyOTP();
       }
-      if (!email || !emailRegex.test(email)) {
-        handleError('Please Provide a Valid Email Address', 'email');
-        setIsValid(false);
-      }
-      if (!phoneNumber || !phoneNumberRegex.test(phoneNumber)) {
-        handleError('Please provide a Valid Phone Number', 'phoneNumber');
-        setIsValid(false);
-      }
-      if (!pinValue) {
-        handleError('Please provide a Valid PIN', 'pinValue');
+      if (!otpValue) {
+        handleError('OTP field cannot be empty', 'otpValue');
         setIsValid(false);
       }
     } catch (error) {
@@ -91,8 +76,13 @@ const OpenAccount = ({ navigation }: any) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
 
-  const handleLogin = async () => {
-    setModalOTPSuccessVisible(true);
+  const handleVerifyOTP = async () => {
+    setLoading(true);
+    if (otpValue !== '123456') {
+      setModalErrVisible(true);
+    } else {
+      setModalOTPSuccessVisible(true);
+    }
   };
 
   return (
@@ -117,75 +107,103 @@ const OpenAccount = ({ navigation }: any) => {
           <KeyboardAvoidingView behavior="height">
             <SafeAreaView style={styles.wrapper}>
               <ModalScreen
-                titleLabel={'OTP sent successfully '}
-                message={'Enter the verification code sent to your email address.'}
+                titleLabel={'OTP Verified Successfully'}
+                message={'Proceed to Set New Password'}
                 modalVisible={modalOTPSuccessVisible}
                 setModalVisible={setModalOTPSuccessVisible}
                 buttonLabelTwo={'Proceed'}
                 buttonOneOnPress={() => {}}
                 buttonTwoOnPress={() => {
-                  setLoading(false);
-                  navigation.navigate('VerifyOTP');
+                  navigation.navigate('SetPassword');
                   setModalOTPSuccessVisible(!modalOTPSuccessVisible);
                 }}
               />
+              <ModalScreen
+                titleLabel={'Incorrect OTP'}
+                message={'You Entered an Incorrect OTP,\nPlease retry'}
+                modalVisible={modalErrVisible}
+                setModalVisible={setModalErrVisible}
+                buttonLabelTwo={'Retry'}
+                buttonOneOnPress={() => {}}
+                buttonTwoOnPress={() => setModalErrVisible(!modalErrVisible)}
+              />
+              <ModalScreen
+                titleLabel={'Leave Page?'}
+                message={'Are you sure you want to cancel the verification process?'}
+                modalVisible={backConfirmModalVisible}
+                setModalVisible={setBackConfirmModalVisible}
+                buttonLabelOne={'Yes'}
+                buttonLabelTwo={'No'}
+                buttonTwoOnPress={() => {
+                  setBackConfirmModalVisible(!backConfirmModalVisible);
+                }}
+                buttonOneOnPress={() => {
+                  navigation.goBack();
+                }}
+                doubleButton={true}
+              />
               {/* <Loader loading={isLoading} /> */}
               <BackButton
-                onPress={() => navigation.replace('LandingScreen')}
+                onPress={() => setBackConfirmModalVisible(true)}
                 label="Back"
                 color="white"
               />
               <View style={styles.container}>
-                <View style={styles.upperSection}>
+                <View>
                   <Logo
                     title="A member of the Custodian Investment plc group"
                     containerStyle={styles.logoContainerStyle}
                   />
 
-                  <Text style={styles.title}>Quick Sign Up </Text>
+                  <Text style={styles.title}>Verify OTP </Text>
+                  <Text style={styles.subTitle}>
+                    A One-Time Password has been sent to your email. Check your inbox or spam{' '}
+                  </Text>
 
                   <CustomInput
-                    placeholder={'PIN'}
-                    onChangeText={(text: string) => setPinValue(text)}
+                    placeholder={'OTP'}
+                    onChangeText={(text: string) => setOtpValue(text)}
                     autoCapitalize="none"
-                    onFocus={() => handleError(null, 'pinValue')}
-                    error={errors.pinValue}
+                    onFocus={() => handleError(null, 'otpValue')}
+                    error={errors.otpValue}
                     editable={true}
-                  />
-                  <CustomInput
-                    placeholder={'Email'}
-                    onChangeText={(text: string) => setEmail(text)}
-                    autoCapitalize="none"
-                    onFocus={() => handleError(null, 'email')}
-                    error={errors.email}
-                    editable={true}
-                  />
-                  <CustomInput
-                    placeholder={'Phone Number'}
-                    onChangeText={(text: string) => setPhoneNumber(text)}
-                    autoCapitalize="none"
-                    onFocus={() => handleError(null, 'phoneNumber')}
-                    error={errors.phoneNumber}
-                    editable={true}
+                    maxLength={6}
+                    keyboardType="number-pad"
+                    returnKeyType="done"
+                    textContentType="oneTimeCode"
+                    customTextStyle={styles.customTextStyle}
                   />
 
                   <Button
                     onPress={() => validate()}
-                    text={'Sign Up'}
+                    text={'Verify'}
                     customTextStyle={styles.btnTextStyle}
                     customBtnStyle={styles.customBtnStyle}
                   />
-
-                  <TextLinks
-                    label="Already Have an Account? Log In"
-                    onPress={() => {
-                      navigation.replace('Login');
+                  <Text
+                    style={{
+                      color: COLORS.NEUTRAL.WHITE,
+                      alignSelf: 'center',
+                      marginTop: verticalScale(30),
                     }}
-                    linkContainerStyles={{
-                      justifyContent: 'center',
-                      marginTop: moderateScale(20),
-                    }}
-                  />
+                  >
+                    Didn’t receive the OTP?
+                  </Text>
+                  <TouchableOpacity onPress={() => {}}>
+                    <Text
+                      style={{
+                        color: COLORS.NEUTRAL.WHITE,
+                        alignSelf: 'center',
+                        textTransform: 'uppercase',
+                        ...FONTS.body3Bold,
+                        borderBottomColor: COLORS.NEUTRAL.WHITE,
+                        borderBottomWidth: 1,
+                        marginTop: verticalScale(5),
+                      }}
+                    >
+                      Resend OTP
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </SafeAreaView>
@@ -196,7 +214,7 @@ const OpenAccount = ({ navigation }: any) => {
   );
 };
 
-export default OpenAccount;
+export default VerifyOTP;
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -231,8 +249,17 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLORS.NEUTRAL.WHITE,
-    ...FONTS.body3Medium,
+    ...FONTS.body3Bold,
     marginBottom: verticalScale(10),
+    textAlign: 'center',
+    fontSize: moderateScale(15),
+  },
+  subTitle: {
+    color: COLORS.NEUTRAL.WHITE,
+    ...FONTS.body3Regular,
+    marginBottom: verticalScale(10),
+    textAlign: 'center',
+    fontSize: 12,
   },
   socials: {
     marginTop: verticalScale(10),
@@ -241,6 +268,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  lowerSection: {},
-  upperSection: {},
+  customTextStyle: {
+    ...FONTS.body2Bold,
+  },
 });
