@@ -22,7 +22,7 @@ import {
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { useDispatch, useSelector } from 'react-redux';
 import { COLORS, FONTS, SIZES } from '../global';
-import { MenuIcon, ProfileImage } from '../components';
+import { MenuIcon, ModalScreen, ProfileImage } from '../components';
 import DashBoard from './DashBoard';
 import StatementRequest from './StatementRequest';
 import FundTransfer from './FundTransfer';
@@ -35,14 +35,16 @@ import PrivacyPolicy from './PrivacyPolicy';
 import MandateChange from './MandateChange';
 import { data } from '../global';
 import { StatusBar } from 'expo-status-bar';
+import { authSelector, clearState } from '../redux/authSlice';
 
 const Drawer = createDrawerNavigator();
 
-//https://bentracker.crusaderpensions.com/recapweb/
-//https://www.crusaderpensions.com/data-privacy-policy/"
-
 const CustomDrawer = (props: any) => {
-  const profile = props.data;
+  const { userData } = useSelector(authSelector);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const dispatch: any = useDispatch();
+
+  const profile = userData[1];
 
   const OpenLink = ({ label, link }: any) => {
     const handleOpenLink = async (url: any) => {
@@ -77,6 +79,22 @@ const CustomDrawer = (props: any) => {
 
   return (
     <View style={{ flex: 1 }}>
+      <ModalScreen
+        titleLabel={'Sign Out?'}
+        message={'Kindly confirm Sign out'}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        buttonLabelOne={'Yes'}
+        buttonLabelTwo={'No'}
+        buttonTwoOnPress={() => {
+          setModalVisible(!modalVisible);
+        }}
+        buttonOneOnPress={() => {
+          props.navigation.replace('Login');
+          setModalVisible(!modalVisible);
+        }}
+        doubleButton={true}
+      />
       <DrawerContentScrollView style={styles.drawerContainer}>
         <View style={styles.profileContainer}>
           <View style={styles.header}>
@@ -89,7 +107,7 @@ const CustomDrawer = (props: any) => {
                 style={styles.drawerProfileName}
               >{`${profile?.title?.toUpperCase()}  ${profile?.surname?.toUpperCase()}  ${profile?.first_name?.toUpperCase()}`}</Text>
               <Text style={styles.drawerProfileEmail}>{profile?.email?.toLowerCase()}</Text>
-              <Text style={styles.drawerProfilePIN}>PEN110043917427</Text>
+              <Text style={styles.drawerProfilePIN}>{profile?.pin}</Text>
             </View>
           </View>
           <TouchableOpacity
@@ -127,7 +145,8 @@ const CustomDrawer = (props: any) => {
       <DrawerItem
         label={'Sign Out'}
         onPress={() => {
-          props.navigation.navigate('LogoutModal');
+          dispatch(clearState());
+          setModalVisible(true);
         }}
         style={{
           width: '100%',
@@ -152,8 +171,8 @@ const CustomDrawer = (props: any) => {
 };
 
 const DrawerMenu = ({ navigation }: any) => {
-  const { profile } = data;
-  const profileData = profile[0];
+  const { userData } = useSelector(authSelector);
+  const profileData = userData[1];
   const HeaderTitle = (props?: any) => {
     const { title, subTitle, customTitleStyle } = props;
     return (

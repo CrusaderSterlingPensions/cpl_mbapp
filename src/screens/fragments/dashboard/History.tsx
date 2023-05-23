@@ -3,7 +3,7 @@ import React from 'react';
 import { moderateScale } from 'react-native-size-matters';
 import { COLORS, FONTS } from '../../../global';
 
-const History = ({ profile }: any) => {
+const History = ({ transactionData }: any) => {
   type transactionProps = {
     period: string;
     rsa: string;
@@ -15,12 +15,25 @@ const History = ({ profile }: any) => {
     currency: 'NGN',
     minimumFractionDigits: 2,
   });
+
   const Transaction = ({ period, rsa, avc }: transactionProps) => {
+    const dateFormatter = (dateString: string) => {
+      const dateParts = dateString.split('-');
+      const year = dateParts[0];
+      const month = parseInt(dateParts[1], 10) - 1; // Subtract 1 to convert to zero-based index
+      const date = new Date(Number(year), month);
+      const formattedDate = date.toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric',
+      });
+
+      return formattedDate;
+    };
     return (
       <View style={styles.transactionContainer}>
-        <View style={[styles.subSection, { backgroundColor: COLORS.NEUTRAL.LIGHT_ACTIVE }]}>
-          <Text style={styles.header}>Period</Text>
-          <Text style={styles.transactionValue}>{period}</Text>
+        <View style={[styles.subSectionHeader]}>
+          {/* <Text style={styles.header}>PERIOD</Text> */}
+          <Text style={styles.transactionValuePeriod}>{dateFormatter(period)}</Text>
         </View>
         <View style={[styles.subSection, { backgroundColor: COLORS.NEUTRAL.LIGHT }]}>
           <View>
@@ -41,19 +54,19 @@ const History = ({ profile }: any) => {
       <ScrollView showsVerticalScrollIndicator={false} alwaysBounceVertical>
         <View style={styles.container}>
           <Transaction
-            rsa={currencyFormatter.format(profile.rsa_1)}
-            avc={currencyFormatter.format(profile.avc_1)}
-            period={profile.period_1}
+            rsa={currencyFormatter.format(transactionData.rsa_1)}
+            avc={currencyFormatter.format(transactionData.avc_1)}
+            period={transactionData.period_1}
           />
           <Transaction
-            rsa={currencyFormatter.format(profile.rsa_2)}
-            avc={currencyFormatter.format(profile.avc_2)}
-            period={profile.period_2}
+            rsa={currencyFormatter.format(transactionData.rsa_2)}
+            avc={currencyFormatter.format(transactionData.avc_2)}
+            period={transactionData.period_2}
           />
           <Transaction
-            rsa={currencyFormatter.format(profile.rsa_3)}
-            avc={currencyFormatter.format(profile.avc_3)}
-            period={profile.period_3}
+            rsa={currencyFormatter.format(transactionData.rsa_3)}
+            avc={currencyFormatter.format(transactionData.avc_3)}
+            period={transactionData.period_3}
           />
         </View>
       </ScrollView>
@@ -89,16 +102,28 @@ const styles = StyleSheet.create({
   },
   subSection: {
     backgroundColor: COLORS.NEUTRAL.WHITE,
-    height: '50%',
+    height: '60%',
     flexDirection: 'row',
     paddingHorizontal: moderateScale(10),
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  subSectionHeader: {
+    backgroundColor: COLORS.NEUTRAL.LIGHT_ACTIVE,
+    height: '40%',
+    flexDirection: 'column',
+    paddingHorizontal: moderateScale(10),
+    alignItems: 'flex-start',
+    justifyContent: 'center',
   },
   header: {
     ...FONTS.body4Regular,
   },
   transactionValue: {
     ...FONTS.body3Bold,
+  },
+  transactionValuePeriod: {
+    ...FONTS.body4Bold,
+    textTransform: 'uppercase',
   },
 });

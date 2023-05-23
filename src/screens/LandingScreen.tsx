@@ -30,11 +30,11 @@ const LandingScreen = ({ navigation, onFinish }: any) => {
     };
   }, []);
   return (
-    <View>
+    <View style={{ height: SIZES.height }}>
       <StatusBar style="light" />
       <View
         style={{
-          height: SIZES.height,
+          height: '100%',
         }}
       >
         {videoComplete ? (
@@ -81,7 +81,7 @@ const LandingScreen = ({ navigation, onFinish }: any) => {
               }}
             />
             <Button
-              text="Open Pensions Account"
+              text="Register"
               onPress={() => {
                 navigation.navigate('OpenAccount');
               }}

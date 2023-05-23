@@ -3,7 +3,7 @@ import React from 'react';
 import { moderateScale } from 'react-native-size-matters';
 import { FONTS } from '../../../global';
 
-const Prices = ({ profile }: any) => {
+const Prices = ({ transactionData }: any) => {
   const priceFormatter = new Intl.NumberFormat('en-NG', {
     style: 'currency',
     currency: 'NGN',
@@ -17,7 +17,7 @@ const Prices = ({ profile }: any) => {
   return (
     <View style={[styles.priceData]}>
       <Text style={styles.prevailingPriceText}>
-        {'Prevailing Price:'} {priceFormatter.format(profile.price)}
+        {'Prevailing Price:'} {priceFormatter.format(transactionData.price)}
       </Text>
       <View style={styles.priceDateAndGains}>
         <Text style={styles.priceDate}>
@@ -25,7 +25,9 @@ const Prices = ({ profile }: any) => {
         </Text>
         <View>
           <Text style={styles.priceDate}>{'Gain/Loss:'}</Text>
-          <Text style={styles.gainLoss}>{currencyFormatter.format(profile.gainLoss)}</Text>
+          <Text style={styles.gainLoss}>
+            {currencyFormatter.format(transactionData.gainLoss_Inceptn)}
+          </Text>
         </View>
       </View>
     </View>

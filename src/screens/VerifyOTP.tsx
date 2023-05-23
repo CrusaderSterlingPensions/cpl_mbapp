@@ -30,9 +30,11 @@ import {
   loginPageBackgroundImage,
   signUpPageBackgroundImage,
 } from '../global/images';
-import { FontAwesome5, Entypo, EvilIcons } from '@expo/vector-icons';
+import { FontAwesome5, Entypo, EvilIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { color } from 'react-native-reanimated';
+import { authSelector, clearState, forgetPassword, verifyOTP } from '../redux/authSlice';
+import { userSelector } from '../redux/userSlice';
 
 const VerifyOTP = ({ navigation }: any) => {
   type errorObjProps = {
@@ -44,23 +46,46 @@ const VerifyOTP = ({ navigation }: any) => {
   };
 
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [otpValue, setOtpValue] = useState<string>('');
   const [errors, setErrors] = useState<errorObjProps>({});
   const [modalErrVisible, setModalErrVisible] = useState<boolean>(false);
   const [modalOTPSuccessVisible, setModalOTPSuccessVisible] = useState<boolean>(false);
   const [backConfirmModalVisible, setBackConfirmModalVisible] = useState<boolean>(false);
+  const [otpResponseData, setOtpResponseData] = useState<any>({});
+  const [resendOtpResponseData, setResendOtpResponseData] = useState<any>({});
+  const [modalResendOTPVisible, setModalResendOTPVisible] = useState<boolean>(false);
+  const [modalResendOTPErrorVisible, setModalResendOTPErrorVisible] = useState<boolean>(false);
 
   const phoneNumberRegex = /^0\d{10}$/;
   const emailRegex = /\S+@\S+\.\S+/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_])(?=.{8,})/;
 
-  useEffect(() => {}, []);
+  const dispatch: any = useDispatch();
+  const { isError, isSuccess, isLoading, error, errorMessage } = useSelector(authSelector);
+  const { forgetPasswordPin } = useSelector(userSelector);
+
+  useEffect(() => {
+    dispatch(clearState());
+    setOtpValue('');
+  }, []);
+
+  console.log('OTP Screen,=====>', forgetPasswordPin);
+
+  // useEffect(() => {
+  //   console.log(error);
+  //   if (isSuccess) {
+  //     setModalOTPSuccessVisible(true);
+  //   }
+
+  //   if (isError) {
+  //     setModalErrVisible(true);
+  //   }
+  // }, [isSuccess, isError]);
 
   const validate = async () => {
     Keyboard.dismiss();
     try {
-      if (emailRegex) {
+      if (otpValue) {
         handleVerifyOTP();
       }
       if (!otpValue) {
@@ -68,7 +93,7 @@ const VerifyOTP = ({ navigation }: any) => {
         setIsValid(false);
       }
     } catch (error) {
-      throw new Error('Error in Account Creation');
+      throw new Error('Error in OTP verification');
     }
   };
 
@@ -77,11 +102,24 @@ const VerifyOTP = ({ navigation }: any) => {
   };
 
   const handleVerifyOTP = async () => {
-    setLoading(true);
-    if (otpValue !== '123456') {
-      setModalErrVisible(true);
-    } else {
+    const otpResponse = await dispatch(
+      verifyOTP({ username: forgetPasswordPin, password: otpValue })
+    );
+    console.log('otpResponse', otpResponse);
+    setOtpResponseData(otpResponse);
+    if (otpResponse?.meta?.requestStatus === 'fulfilled') {
       setModalOTPSuccessVisible(true);
+    } else if (otpResponse?.meta?.requestStatus === 'rejected') {
+      setModalErrVisible(true);
+    }
+  };
+  const handleResendOTP = async () => {
+    const response = await dispatch(forgetPassword({ username: forgetPasswordPin }));
+    setResendOtpResponseData(response);
+    if (response?.meta?.requestStatus === 'fulfilled') {
+      setModalResendOTPVisible(true);
+    } else if (response?.meta?.requestStatus === 'rejected') {
+      setModalResendOTPErrorVisible(true);
     }
   };
 
@@ -107,26 +145,75 @@ const VerifyOTP = ({ navigation }: any) => {
           <KeyboardAvoidingView behavior="height">
             <SafeAreaView style={styles.wrapper}>
               <ModalScreen
-                titleLabel={'OTP Verified Successfully'}
-                message={'Proceed to Set New Password'}
+                icon={
+                  <Ionicons
+                    name="checkmark-done-circle-outline"
+                    size={40}
+                    color={COLORS.NEUTRAL.GRAY}
+                  />
+                }
+                titleLabel={'Success'}
+                message={resendOtpResponseData.payload?.message}
+                modalVisible={modalResendOTPVisible}
+                setModalVisible={setModalResendOTPVisible}
+                buttonLabelTwo={'Verify'}
+                buttonOneOnPress={() => {}}
+                buttonTwoOnPress={() => {
+                  setModalResendOTPVisible(!modalResendOTPVisible);
+                }}
+              />
+              <ModalScreen
+                icon={
+                  <MaterialIcons name="error-outline" size={40} color={COLORS.NEUTRAL.ACCENT} />
+                }
+                titleLabel={'Error'}
+                message={resendOtpResponseData.payload?.message}
+                modalVisible={modalResendOTPErrorVisible}
+                setModalVisible={setModalResendOTPErrorVisible}
+                buttonLabelTwo={'Retry'}
+                buttonOneOnPress={() => {}}
+                buttonTwoOnPress={() => {
+                  setModalResendOTPErrorVisible(!modalResendOTPErrorVisible);
+                }}
+              />
+
+              <ModalScreen
+                icon={
+                  <Ionicons
+                    name="checkmark-done-circle-outline"
+                    size={40}
+                    color={COLORS.NEUTRAL.GRAY}
+                  />
+                }
+                titleLabel={'Success'}
+                message={otpResponseData.payload?.message}
                 modalVisible={modalOTPSuccessVisible}
                 setModalVisible={setModalOTPSuccessVisible}
                 buttonLabelTwo={'Proceed'}
                 buttonOneOnPress={() => {}}
                 buttonTwoOnPress={() => {
-                  navigation.navigate('SetPassword');
+                  dispatch(clearState());
+                  navigation.replace('SetPassword');
                   setModalOTPSuccessVisible(!modalOTPSuccessVisible);
                 }}
               />
+
               <ModalScreen
-                titleLabel={'Incorrect OTP'}
-                message={'You Entered an Incorrect OTP,\nPlease retry'}
+                icon={
+                  <MaterialIcons name="error-outline" size={40} color={COLORS.NEUTRAL.ACCENT} />
+                }
+                titleLabel={'Error'}
+                message={otpResponseData.payload?.message}
                 modalVisible={modalErrVisible}
                 setModalVisible={setModalErrVisible}
                 buttonLabelTwo={'Retry'}
                 buttonOneOnPress={() => {}}
-                buttonTwoOnPress={() => setModalErrVisible(!modalErrVisible)}
+                buttonTwoOnPress={() => {
+                  dispatch(clearState());
+                  setModalErrVisible(!modalErrVisible);
+                }}
               />
+
               <ModalScreen
                 titleLabel={'Leave Page?'}
                 message={'Are you sure you want to cancel the verification process?'}
@@ -139,6 +226,7 @@ const VerifyOTP = ({ navigation }: any) => {
                 }}
                 buttonOneOnPress={() => {
                   navigation.goBack();
+                  setBackConfirmModalVisible(!backConfirmModalVisible);
                 }}
                 doubleButton={true}
               />
@@ -157,7 +245,7 @@ const VerifyOTP = ({ navigation }: any) => {
 
                   <Text style={styles.title}>Verify OTP </Text>
                   <Text style={styles.subTitle}>
-                    A One-Time Password has been sent to your email. Check your inbox or spam{' '}
+                    A One-Time Password was sent to your email. Check your inbox or spam{' '}
                   </Text>
 
                   <CustomInput
@@ -167,7 +255,7 @@ const VerifyOTP = ({ navigation }: any) => {
                     onFocus={() => handleError(null, 'otpValue')}
                     error={errors.otpValue}
                     editable={true}
-                    maxLength={6}
+                    maxLength={8}
                     keyboardType="number-pad"
                     returnKeyType="done"
                     textContentType="oneTimeCode"
@@ -189,7 +277,11 @@ const VerifyOTP = ({ navigation }: any) => {
                   >
                     Didn’t receive the OTP?
                   </Text>
-                  <TouchableOpacity onPress={() => {}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleResendOTP();
+                    }}
+                  >
                     <Text
                       style={{
                         color: COLORS.NEUTRAL.WHITE,

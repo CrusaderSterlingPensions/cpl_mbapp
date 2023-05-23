@@ -31,8 +31,10 @@ import {
   loginPageBackgroundImage,
   signUpPageBackgroundImage,
 } from '../global/images';
-import { FontAwesome5, Entypo, EvilIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { authSelector, clearState, resetPassword } from '../redux/authSlice';
+import { userSelector } from '../redux/userSlice';
+import { FontAwesome5, Entypo, EvilIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 const SetPassword = ({ navigation }: any) => {
   type errorObjProps = {
@@ -44,7 +46,6 @@ const SetPassword = ({ navigation }: any) => {
   };
 
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [pinValue, setPinValue] = useState<string>('');
   const [errors, setErrors] = useState<errorObjProps>({});
   const [password, setPassword] = useState<string>('');
@@ -56,21 +57,40 @@ const SetPassword = ({ navigation }: any) => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [modalOTPSuccessVisible, setModalOTPSuccessVisible] = useState<boolean>(false);
+  const [modalOTPErrorVisible, setModalOTPErrorVisible] = useState<boolean>(false);
+  const [passwordResponseData, setPasswordResponseData] = useState<any>({});
+  const [modalSetPasswordVisible, setModalSetPasswordVisible] = useState<boolean>(false);
+  const [modalSetPasswordErrorVisible, setModalSetPasswordErrorVisible] = useState<boolean>(false);
 
   const phoneNumberRegex = /^0\d{10}$/;
   const emailRegex = /\S+@\S+\.\S+/;
-  const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_])(?=.{8,})/;
+  const passwordRegex = /^(?=.*\d).{8,}$/;
 
-  useEffect(() => {}, []);
+  const dispatch: any = useDispatch();
+  const { userData, isLoading, isSuccess, isError } = useSelector(authSelector);
+  const { forgetPasswordPin } = useSelector(userSelector);
 
-  console.log(phoneNumberRegex.test(phoneNumber), phoneNumber);
+  console.log('User data PIN', forgetPasswordPin, '=============');
+
+  useEffect(() => {
+    dispatch(clearState());
+  }, []);
+
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     setModalOTPSuccessVisible(true);
+  //   }
+
+  //   if (isError) {
+  //     setModalOTPErrorVisible(true);
+  //   }
+  // }, [isSuccess, isError]);
 
   const validate = async () => {
     Keyboard.dismiss();
     try {
       if (passwordRegex.test(password) && password === confirmPassword) {
         handleSetPassword();
-        setLoading(true);
       }
       if (!password) {
         handleError('Password Field cannot be Empty', 'password');
@@ -90,7 +110,15 @@ const SetPassword = ({ navigation }: any) => {
   };
 
   const handleSetPassword = async () => {
-    setModalOTPSuccessVisible(true);
+    const response = await dispatch(
+      resetPassword({ username: forgetPasswordPin, password: password })
+    );
+    setPasswordResponseData(response);
+    if (response?.meta?.requestStatus === 'fulfilled') {
+      setModalSetPasswordVisible(true);
+    } else if (response?.meta?.requestStatus === 'rejected') {
+      setModalSetPasswordErrorVisible(true);
+    }
   };
 
   return (
@@ -115,24 +143,47 @@ const SetPassword = ({ navigation }: any) => {
           <KeyboardAvoidingView behavior="height">
             <SafeAreaView style={styles.wrapper}>
               <ModalScreen
-                titleLabel={'Password Set Successfully '}
-                message={'Proceed to Login to Access your Account'}
-                modalVisible={modalOTPSuccessVisible}
-                setModalVisible={setModalOTPSuccessVisible}
+                icon={
+                  <Ionicons
+                    name="checkmark-done-circle-outline"
+                    size={40}
+                    color={COLORS.NEUTRAL.GRAY}
+                  />
+                }
+                titleLabel={'Success '}
+                message={passwordResponseData.payload?.message}
+                modalVisible={modalSetPasswordVisible}
+                setModalVisible={setModalSetPasswordVisible}
                 buttonLabelTwo={'Proceed'}
                 buttonOneOnPress={() => {}}
                 buttonTwoOnPress={() => {
-                  setLoading(false);
-                  navigation.navigate('Login');
-                  setModalOTPSuccessVisible(!modalOTPSuccessVisible);
+                  dispatch(clearState());
+                  navigation.replace('Login');
+                  setModalSetPasswordVisible(!modalSetPasswordVisible);
                 }}
               />
-              {/* <Loader loading={isLoading} /> */}
-              <BackButton
+              <ModalScreen
+                icon={
+                  <MaterialIcons name="error-outline" size={40} color={COLORS.NEUTRAL.ACCENT} />
+                }
+                titleLabel={'Error'}
+                message={passwordResponseData.payload?.message}
+                modalVisible={modalOTPErrorVisible}
+                setModalVisible={setModalOTPErrorVisible}
+                buttonLabelTwo={'Try Again'}
+                buttonOneOnPress={() => {}}
+                buttonTwoOnPress={() => {
+                  dispatch(clearState());
+                  navigation.replace('Login');
+                  setModalOTPErrorVisible(!modalOTPErrorVisible);
+                }}
+              />
+              <Loader loading={isLoading} />
+              {/* <BackButton
                 onPress={() => navigation.replace('LandingScreen')}
                 label="Back"
                 color="white"
-              />
+              /> */}
               <View style={styles.container}>
                 <View style={styles.upperSection}>
                   <Logo
@@ -140,7 +191,7 @@ const SetPassword = ({ navigation }: any) => {
                     containerStyle={styles.logoContainerStyle}
                   />
 
-                  <Text style={styles.title}> Set up Password </Text>
+                  <Text style={styles.title}> Password Setup </Text>
 
                   <CustomInput
                     placeholder={'Set Password'}
@@ -150,6 +201,7 @@ const SetPassword = ({ navigation }: any) => {
                     error={errors.password}
                     editable={true}
                     password={true}
+                    customTextStyle={{ width: '90%' }}
                   />
                   <CustomInput
                     placeholder={'Confirm Password'}
@@ -159,6 +211,7 @@ const SetPassword = ({ navigation }: any) => {
                     error={errors.confirmPassword}
                     editable={true}
                     password={true}
+                    customTextStyle={{ width: '90%' }}
                   />
 
                   {!passwordRegex.test(password) && <PasswordInstructions />}
@@ -217,7 +270,6 @@ const styles = StyleSheet.create({
     ...FONTS.body3Bold,
     marginBottom: verticalScale(10),
     fontSize: moderateScale(15),
-    textAlign: 'center',
   },
   socials: {
     marginTop: verticalScale(10),

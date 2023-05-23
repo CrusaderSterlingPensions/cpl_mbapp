@@ -7,10 +7,9 @@ const PasswordInstructions = () => {
   return (
     <View>
       <View style={styles.container}>
-        <Text style={styles.instructionHeader}>{'Password must contain the following:'}</Text>
-        <Text style={styles.instructionText}>- {'Be at Least 8 characters'}</Text>
-        <Text style={styles.instructionText}>- {'Contains a capital letter'}</Text>
-        <Text style={styles.instructionText}>- {'Contains a special key'}</Text>
+        <Text style={styles.instructionHeader}>{'Password Criteria:'}</Text>
+        <Text style={styles.instructionText}>- {'Be at Least 8 characters long'}</Text>
+        <Text style={styles.instructionText}>- {'Contains at least one Number(digit)'}</Text>
       </View>
     </View>
   );

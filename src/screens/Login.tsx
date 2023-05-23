@@ -14,11 +14,23 @@ import {
 import React, { useState, useEffect } from 'react';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { FONTS, SIZES, COLORS } from '../global';
-import { BackButton, Button, CustomInput, Line, Loader, Logo, TextLinks } from '../components';
+import {
+  BackButton,
+  Button,
+  CustomInput,
+  Line,
+  Loader,
+  Logo,
+  ModalScreen,
+  TextLinks,
+} from '../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import { landingPageBackgroundImage, loginPageBackgroundImage } from '../global/images';
-import { FontAwesome5, Entypo, EvilIcons } from '@expo/vector-icons';
+import { FontAwesome5, Entypo, EvilIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { authSelector, clearState, userLogin } from '../redux/authSlice';
+import { setLoginPassword, setLoginPin, userSelector } from '../redux/userSlice';
+// import Constants from 'expo-constants';
 
 const Login = ({ navigation }: any) => {
   type errorObjProps = {
@@ -30,17 +42,41 @@ const Login = ({ navigation }: any) => {
   };
 
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [pinValue, setPinValue] = useState<string>('');
   const [errors, setErrors] = useState<errorObjProps>({});
   const [password, setPassword] = useState<string>('');
   const [isChecked, setChecked] = useState<boolean>(false);
   const [timerError, setTimerError] = useState<boolean>(false);
+  const [modalOTPSuccessVisible, setModalOTPSuccessVisible] = useState<boolean>(false);
+  const [modalOTPErrorVisible, setModalOTPErrorVisible] = useState<boolean>(false);
+  const [modalLoginVisible, setModalLoginVisible] = useState<boolean>(false);
+  const [modalLoginErrorVisible, setModalLoginErrorVisible] = useState<boolean>(false);
+  const [loginResponseData, setLoginResponseData] = useState<any>({});
 
   const pinRegex = /^PEN\d{12}$/;
-  const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_])(?=.{8,})/;
+  const passwordRegex = /^(?=.*\d).{8,}$/;
 
-  useEffect(() => {}, []);
+  const dispatch: any = useDispatch();
+  const { isError, isSuccess, isLoading, error } = useSelector(authSelector);
+  const { loginPin, loginPassword } = useSelector(userSelector);
+
+  useEffect(() => {
+    dispatch(clearState());
+    setPinValue('');
+    setPassword('');
+  }, []);
+
+  console.log('activity is going on============================');
+
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     navigation.navigate('DrawerMenu');
+  //   }
+
+  //   if (isError) {
+  //     setModalOTPErrorVisible(true);
+  //   }
+  // }, [isSuccess, isError]);
 
   const validate = async () => {
     Keyboard.dismiss();
@@ -66,8 +102,14 @@ const Login = ({ navigation }: any) => {
   };
 
   const handleLogin = async () => {
-    setLoading(true);
-    navigation.navigate('DrawerMenu');
+    const response = await dispatch(userLogin({ username: pinValue, password: password }));
+    console.log('Login Response', response);
+    setLoginResponseData(response);
+    if (response?.meta?.requestStatus === 'fulfilled') {
+      navigation.replace('DrawerMenu');
+    } else if (response?.meta?.requestStatus === 'rejected') {
+      setModalLoginErrorVisible(true);
+    }
   };
 
   const OpenSocials = ({ icon, link }: any) => {
@@ -101,7 +143,22 @@ const Login = ({ navigation }: any) => {
           }}
         >
           <SafeAreaView style={styles.wrapper}>
-            {/* <Loader loading={isLoading} /> */}
+            <Loader loading={isLoading} />
+
+            <ModalScreen
+              icon={<MaterialIcons name="error-outline" size={40} color={COLORS.NEUTRAL.ACCENT} />}
+              titleLabel={'Error'}
+              message={loginResponseData.payload?.message}
+              modalVisible={modalLoginErrorVisible}
+              setModalVisible={setModalLoginErrorVisible}
+              buttonLabelTwo={'Retry'}
+              buttonOneOnPress={() => {}}
+              buttonTwoOnPress={() => {
+                setModalLoginErrorVisible(!modalLoginErrorVisible);
+                dispatch(clearState());
+              }}
+            />
+
             {/* <BackButton onPress={() => navigation.goBack()} label="Back" color="white" /> */}
             <View style={styles.container}>
               <View style={styles.upperSection}>
@@ -112,7 +169,10 @@ const Login = ({ navigation }: any) => {
 
                 <CustomInput
                   placeholder={'PIN'}
-                  onChangeText={(text: string) => setPinValue(text)}
+                  onChangeText={(text: string) => {
+                    setPinValue(text);
+                    dispatch(setLoginPin(text));
+                  }}
                   autoCapitalize="none"
                   onFocus={() => handleError(null, 'pinValue')}
                   error={errors.pinValue}
@@ -124,14 +184,20 @@ const Login = ({ navigation }: any) => {
                   confirmPassword={true}
                   onFocus={() => handleError(null, 'password')}
                   error={errors.password}
-                  onChangeText={(text: string) => setPassword(text)}
+                  onChangeText={(text: string) => {
+                    setPassword(text);
+                    dispatch(setLoginPassword(text));
+                  }}
                   autoCapitalize="none"
                   editable={true}
+                  customTextStyle={{ width: '90%' }}
                 />
 
                 <TextLinks
                   label="Forget Password?"
-                  onPress={() => {}}
+                  onPress={() => {
+                    navigation.replace('ForgetPassword');
+                  }}
                   linkContainerStyles={{
                     justifyContent: 'flex-end',
                     marginTop: moderateScale(10),
@@ -165,7 +231,7 @@ const Login = ({ navigation }: any) => {
                   <Line />
                 </View>
                 <TextLinks
-                  label="Open Pension Account"
+                  label="Register Account"
                   onPress={() => {
                     navigation.replace('OpenAccount');
                   }}

@@ -4,12 +4,18 @@ import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { COLORS, FONTS, SIZES } from '../../../global';
 import { nairaLogoWhite } from '../../../global/images';
 
-const Balances = ({ profile }: any) => {
+const Balances = ({ transactionData, profileData }: any) => {
   const currencyFormatter = new Intl.NumberFormat('en-NG', {
     style: 'currency',
     currency: 'NGN',
     minimumFractionDigits: 2,
   });
+
+  console.log(
+    'This is the transactionData ========================',
+    transactionData.units_Held,
+    profileData.fund_id
+  );
 
   return (
     <View>
@@ -23,11 +29,11 @@ const Balances = ({ profile }: any) => {
             styles.balancesContainer,
             {
               backgroundColor:
-                profile.fund_id === 1
+                profileData.fund_id === '1'
                   ? COLORS.DASHBOARD.FUND1LIGHT
-                  : profile.fund_id === 2
+                  : profileData.fund_id === '2'
                   ? COLORS.DASHBOARD.FUND2LIGHT
-                  : profile.fund_id === 3
+                  : profileData.fund_id === '3'
                   ? COLORS.DASHBOARD.FUND3LIGHT
                   : COLORS.DASHBOARD.FUND4LIGHT,
             },
@@ -36,7 +42,7 @@ const Balances = ({ profile }: any) => {
           <View style={styles.totalRSA}>
             <Text style={styles.rsaAvcText}>TOTAL RSA</Text>
             <Text style={styles.rsaAvcAmountText}>
-              {currencyFormatter.format(profile.total_rsa)}
+              {currencyFormatter.format(transactionData.total_rsa)}
             </Text>
           </View>
           <View style={styles.totalValueWrapper}>
@@ -44,14 +50,14 @@ const Balances = ({ profile }: any) => {
             <View>
               <Text style={styles.totalBalanceText}>Total Balance</Text>
               <Text style={styles.totalBalanceAmountText}>
-                {currencyFormatter.format(profile.current_value)}
+                {currencyFormatter.format(transactionData.current_Value)}
               </Text>
             </View>
           </View>
           <View style={styles.totalAVC}>
             <Text style={styles.rsaAvcText}>TOTAL AVC</Text>
             <Text style={styles.rsaAvcAmountText}>
-              {currencyFormatter.format(profile.total_avc)}
+              {currencyFormatter.format(transactionData.total_avc)}
             </Text>
           </View>
         </View>
@@ -60,11 +66,11 @@ const Balances = ({ profile }: any) => {
             styles.balancesContainer,
             {
               backgroundColor:
-                profile.fund_id === 1
+                profileData.fund_id === '1'
                   ? COLORS.DASHBOARD.FUND1NORMAL
-                  : profile.fund_id === 2
+                  : profileData.fund_id === '2'
                   ? COLORS.DASHBOARD.FUND2NORMAL
-                  : profile.fund_id === 3
+                  : profileData.fund_id === '3'
                   ? COLORS.DASHBOARD.FUND3NORMAL
                   : COLORS.DASHBOARD.FUND4NORMAL,
             },
@@ -74,13 +80,13 @@ const Balances = ({ profile }: any) => {
             <View style={styles.totalWithdrawal}>
               <Text style={styles.totalWithdrawalText}>Total Withdrawal</Text>
               <Text style={styles.contributionsAmount}>
-                {currencyFormatter.format(profile.total_With_Inceptn)}
+                {currencyFormatter.format(transactionData.total_With_Inceptn)}
               </Text>
             </View>
             <View style={styles.totalWithdrawal}>
               <Text style={styles.totalWithdrawalText}>Contribution</Text>
               <Text style={styles.contributionsAmount}>
-                {currencyFormatter.format(profile.contrib_Inceptn)}
+                {currencyFormatter.format(transactionData.contrib_Inceptn)}
               </Text>
             </View>
           </View>
@@ -90,11 +96,11 @@ const Balances = ({ profile }: any) => {
             styles.balancesContainer,
             {
               backgroundColor:
-                profile.fund_id === 1
+                profileData.fund_id === '1'
                   ? COLORS.DASHBOARD.FUND1DARK
-                  : profile.fund_id === 2
+                  : profileData.fund_id === '2'
                   ? COLORS.DASHBOARD.FUND2DARK
-                  : profile.fund_id === 3
+                  : profileData.fund_id === '3'
                   ? COLORS.DASHBOARD.FUND3DARK
                   : COLORS.DASHBOARD.FUND4DARK,
             },
@@ -103,12 +109,15 @@ const Balances = ({ profile }: any) => {
           <View style={styles.contributions}>
             <View style={styles.totalWithdrawal}>
               <Text style={styles.totalWithdrawalText}>Fund Type</Text>
-              <Text style={styles.contributionsAmount}>{`Fund ${profile.fund_id}`}</Text>
+              <Text style={styles.contributionsAmount}>{`Fund ${profileData.fund_id}`}</Text>
             </View>
             <View style={styles.totalWithdrawal}>
               <Text style={styles.totalWithdrawalText}>Unit Held</Text>
               <Text style={styles.contributionsAmount}>
-                {Number(profile.units_held).toFixed(2)}
+                {Number(transactionData.units_Held).toLocaleString('en-US', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })}
               </Text>
             </View>
           </View>

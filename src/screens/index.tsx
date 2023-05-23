@@ -15,6 +15,7 @@ import Profile from './Profile';
 import LogoutModal from './LogoutModal';
 import VerifyOTP from './VerifyOTP';
 import SetPassword from './SetPassword';
+import ForgetPassword from './ForgetPassword';
 
 export {
   LandingScreen,
@@ -34,4 +35,5 @@ export {
   LogoutModal,
   VerifyOTP,
   SetPassword,
+  ForgetPassword,
 };

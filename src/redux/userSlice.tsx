@@ -14,7 +14,9 @@ type userProps = {
 
 let initialState: stateProp = {
   // role: null,
-  // id: null,
+  loginPin: '',
+  forgetPasswordPin: '',
+  loginPassword: '',
   sessionExpired: false,
   isLoading: false,
   isSuccess: false,
@@ -81,8 +83,20 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setRole: (state, action) => {
-      state.role = action.payload;
+    clearLoginDetails: (state) => {
+      state.loginPin = '';
+      state.loginPassword = '';
+    },
+
+    setForgetPasswordPin: (state, action) => {
+      console.log('digits', action.payload);
+      state.forgetPasswordPin = action.payload;
+    },
+    setLoginPin: (state, action) => {
+      state.loginPin = action.payload;
+    },
+    setLoginPassword: (state, action) => {
+      state.loginPassword = action.payload;
     },
   },
   extraReducers(builder) {
@@ -112,6 +126,7 @@ const userSlice = createSlice({
   },
 });
 
-export const { setRole } = userSlice.actions;
+export const { clearLoginDetails, setLoginPassword, setLoginPin, setForgetPasswordPin } =
+  userSlice.actions;
 export const userSelector = (state: stateProp) => state.user;
 export default userSlice.reducer;

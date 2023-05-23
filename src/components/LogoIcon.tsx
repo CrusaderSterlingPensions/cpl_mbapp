@@ -51,7 +51,15 @@ export const ProfileImage = ({ profile, onPress }: profileImageProps) => {
 };
 export const MenuIcon = ({ onPress }: menuIconProps) => {
   return (
-    <Pressable onPress={onPress} style={{ marginLeft: 10 }}>
+    <Pressable
+      onPress={onPress}
+      style={{
+        marginLeft: 10,
+        width: 70,
+        height: 50,
+        justifyContent: 'center',
+      }}
+    >
       <Image
         source={menuIconDark}
         style={{

@@ -8,6 +8,7 @@ import { StyleProp } from 'react-native';
 import { RootSiblingParent } from 'react-native-root-siblings';
 
 type modalScreenProps = {
+  error?: boolean;
   modalVisible: boolean | undefined;
   setModalVisible: any;
   titleLabel?: string;
@@ -23,6 +24,7 @@ type modalScreenProps = {
 };
 
 const ModalScreen = ({
+  error,
   modalVisible,
   setModalVisible,
   titleLabel,
@@ -79,7 +81,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: COLORS.NEUTRAL.TRANSPARENT_WHITE60,
+    backgroundColor: COLORS.NEUTRAL.TRANSPARENT85,
   },
   modalView: {
     backgroundColor: COLORS.NEUTRAL.WHITE,

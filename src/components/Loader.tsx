@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Modal, ActivityIndicator } from 'react-native';
+import { Flow, Swing } from 'react-native-animated-spinkit';
+import { COLORS } from '../global';
 
 const Loader = ({ loading }: any) => {
   return (
@@ -12,14 +14,15 @@ const Loader = ({ loading }: any) => {
       }}
     >
       <View style={styles.modalBackground}>
-        <View style={styles.activityIndicatorWrapper}>
+        {/* <View style={styles.activityIndicatorWrapper}>
           <ActivityIndicator
             animating={true}
             color="#000000"
             size="large"
             style={styles.activityIndicator}
           />
-        </View>
+        </View> */}
+        <Swing color={COLORS.NEUTRAL.ACCENT} size={90} />
       </View>
     </Modal>
   );

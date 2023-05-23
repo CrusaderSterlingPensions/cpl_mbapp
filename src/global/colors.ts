@@ -74,6 +74,8 @@ export const COLORS = {
     DARK_ACTIVE: '#0D0C0C',
     DARKER: '#0A0909',
     GRAY: 'gray',
+    TRANSPARENT90: 'rgba(0,0,0,0.9)',
+    TRANSPARENT85: 'rgba(0,0,0,0.85)',
     TRANSPARENT80: 'rgba(0,0,0,0.8)',
     TRANSPARENT60: 'rgba(0,0,0,0.5)',
     TRANSPARENT40: 'rgba(0,0,0,0.4)',

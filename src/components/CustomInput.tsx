@@ -198,7 +198,16 @@ const CustomInput = ({
           {...props}
         />
         {(password || confirmPassword) && (
-          <TouchableOpacity onPress={() => toggleBalance()}>
+          <TouchableOpacity
+            onPress={() => toggleBalance()}
+            style={{
+              width: 40,
+              height: 50,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
             <FontAwesome5
               name={!isShown ? 'eye' : 'eye-slash'}
               size={normalize(16)}
@@ -230,10 +239,11 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: COLORS.NEUTRAL.TRANSPARENT_WHITE20,
     paddingLeft: scale(10),
-    paddingRight: scale(30),
+    paddingRight: scale(10),
     borderRadius: moderateScale(8),
     borderWidth: 1,
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     borderColor: COLORS.NEUTRAL.WHITE,
   },
@@ -242,7 +252,7 @@ const styles = StyleSheet.create({
     color: COLORS.NEUTRAL.WHITE,
     width: '100%',
     paddingLeft: scale(5),
-    paddingRight: scale(20),
+    paddingRight: scale(5),
     ...FONTS.body3Regular,
   },
   errorMessage: {

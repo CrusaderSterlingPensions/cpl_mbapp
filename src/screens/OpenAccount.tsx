@@ -30,8 +30,10 @@ import {
   loginPageBackgroundImage,
   signUpPageBackgroundImage,
 } from '../global/images';
-import { FontAwesome5, Entypo, EvilIcons } from '@expo/vector-icons';
+import { FontAwesome5, Entypo, EvilIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { authSelector, clearState, createAccount } from '../redux/authSlice';
+import { setForgetPasswordPin } from '../redux/userSlice';
 
 const OpenAccount = ({ navigation }: any) => {
   type errorObjProps = {
@@ -43,7 +45,6 @@ const OpenAccount = ({ navigation }: any) => {
   };
 
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [pinValue, setPinValue] = useState<string>('');
   const [errors, setErrors] = useState<errorObjProps>({});
   const [password, setPassword] = useState<string>('');
@@ -53,22 +54,26 @@ const OpenAccount = ({ navigation }: any) => {
   const [lastName, setLastName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [modalOTPSuccessVisible, setModalOTPSuccessVisible] = useState<boolean>(false);
+  const [modalCreateSuccessVisible, setModalCreateSuccessVisible] = useState<boolean>(false);
+  const [modalCreateErrorVisible, setModalCreateErrorVisible] = useState<boolean>(false);
+  const [createAccountResponseData, setCreateAccountResponseData] = useState<any>({});
 
   const phoneNumberRegex = /^0\d{10}$/;
   const emailRegex = /\S+@\S+\.\S+/;
-  const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_])(?=.{8,})/;
+  const passwordRegex = /^(?=.*\d).{8,}$/;
 
-  useEffect(() => {}, []);
+  const dispatch: any = useDispatch();
+  const { isLoading } = useSelector(authSelector);
 
-  console.log(phoneNumberRegex.test(phoneNumber), phoneNumber);
+  useEffect(() => {
+    dispatch(clearState());
+  }, []);
 
   const validate = async () => {
     Keyboard.dismiss();
     try {
       if (emailRegex.test(email) && pinValue && phoneNumber) {
         handleLogin();
-        setLoading(true);
       }
       if (!email || !emailRegex.test(email)) {
         handleError('Please Provide a Valid Email Address', 'email');
@@ -92,7 +97,13 @@ const OpenAccount = ({ navigation }: any) => {
   };
 
   const handleLogin = async () => {
-    setModalOTPSuccessVisible(true);
+    const response = await dispatch(createAccount({ username: pinValue, password: email }));
+    setCreateAccountResponseData(response);
+    if (response?.meta?.requestStatus === 'fulfilled') {
+      setModalCreateSuccessVisible(true);
+    } else if (response?.meta?.requestStatus === 'rejected') {
+      setModalCreateErrorVisible(true);
+    }
   };
 
   return (
@@ -117,19 +128,40 @@ const OpenAccount = ({ navigation }: any) => {
           <KeyboardAvoidingView behavior="height">
             <SafeAreaView style={styles.wrapper}>
               <ModalScreen
-                titleLabel={'OTP sent successfully '}
-                message={'Enter the verification code sent to your email address.'}
-                modalVisible={modalOTPSuccessVisible}
-                setModalVisible={setModalOTPSuccessVisible}
+                icon={
+                  <Ionicons
+                    name="checkmark-done-circle-outline"
+                    size={40}
+                    color={COLORS.NEUTRAL.GRAY}
+                  />
+                }
+                titleLabel={'Success '}
+                message={'Verification code sent to your email address.'}
+                modalVisible={modalCreateSuccessVisible}
+                setModalVisible={setModalCreateSuccessVisible}
                 buttonLabelTwo={'Proceed'}
                 buttonOneOnPress={() => {}}
                 buttonTwoOnPress={() => {
-                  setLoading(false);
                   navigation.navigate('VerifyOTP');
-                  setModalOTPSuccessVisible(!modalOTPSuccessVisible);
+                  setModalCreateSuccessVisible(!modalCreateSuccessVisible);
                 }}
               />
-              {/* <Loader loading={isLoading} /> */}
+              <ModalScreen
+                icon={
+                  <MaterialIcons name="error-outline" size={40} color={COLORS.NEUTRAL.ACCENT} />
+                }
+                titleLabel={'Error '}
+                message={createAccountResponseData.payload?.message}
+                modalVisible={modalCreateErrorVisible}
+                setModalVisible={setModalCreateErrorVisible}
+                buttonLabelTwo={'Retry'}
+                buttonOneOnPress={() => {}}
+                buttonTwoOnPress={() => {
+                  dispatch(clearState());
+                  setModalCreateErrorVisible(!modalCreateErrorVisible);
+                }}
+              />
+              <Loader loading={isLoading} />
               <BackButton
                 onPress={() => navigation.replace('LandingScreen')}
                 label="Back"
@@ -146,7 +178,10 @@ const OpenAccount = ({ navigation }: any) => {
 
                   <CustomInput
                     placeholder={'PIN'}
-                    onChangeText={(text: string) => setPinValue(text)}
+                    onChangeText={(text: string) => {
+                      dispatch(setForgetPasswordPin(text));
+                      setPinValue(text);
+                    }}
                     autoCapitalize="none"
                     onFocus={() => handleError(null, 'pinValue')}
                     error={errors.pinValue}

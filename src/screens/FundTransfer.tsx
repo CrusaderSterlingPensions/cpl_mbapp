@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   container: {
     width: SIZES.width,
     paddingVertical: verticalScale(20),
-    paddingHorizontal: verticalScale(25),
+    paddingHorizontal: verticalScale(15),
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'space-between',

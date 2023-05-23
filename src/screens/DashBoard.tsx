@@ -6,25 +6,30 @@ import { Image } from 'react-native';
 import { nairaLogoWhite } from '../global/images';
 import { Balances, History, Prices } from './fragments';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCurrentUser } from '../redux/userSlice';
+import { fetchCurrentUser, userSelector } from '../redux/userSlice';
 import { data } from '../global';
 import { StatusBar } from 'expo-status-bar';
+import { authSelector, userLogin } from '../redux/authSlice';
 
 const DashBoard = () => {
   const dispatch: any = useDispatch();
-  const { profile } = data;
-  const profileData = profile[0];
+  const { loginPin, loginPassword } = useSelector(userSelector);
+  const { userData } = useSelector(authSelector);
+  const profileData = userData[1];
+  const transactionData = userData[2];
 
-  useEffect(() => {
-    dispatch(fetchCurrentUser());
-  }, []);
+  console.log('Dashboard is still rendering, and it is too bad');
+
+  // useEffect(() => {
+  //   dispatch(userLogin({ pin: 'loginPin', password: loginPassword }));
+  // }, []);
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" translucent />
-      <Balances profile={profileData} />
-      <Prices profile={profileData} />
-      <History profile={profileData} />
+      <Balances transactionData={transactionData} profileData={profileData} />
+      <Prices transactionData={transactionData} />
+      <History transactionData={transactionData} />
     </View>
   );
 };

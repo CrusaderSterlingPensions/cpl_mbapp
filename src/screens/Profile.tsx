@@ -80,7 +80,7 @@ const Profile = ({ navigation, route }: any) => {
                 <View style={styles.line}>
                   <View style={styles.infoContainer}>
                     <Text style={styles.infoTitle}>Address</Text>
-                    <Text style={styles.infoBody}>{profile?.address?.toUpperCase()}</Text>
+                    <Text style={styles.infoBody}>{profile?.postal_address?.toUpperCase()}</Text>
                   </View>
                 </View>
                 <View style={styles.line}>
@@ -130,6 +130,8 @@ const Profile = ({ navigation, route }: any) => {
                     <Text style={styles.infoTitle}>Full Name</Text>
                     <Text style={styles.infoBody}>
                       {profile?.nok_firstname?.toUpperCase() +
+                        ' ' +
+                        profile?.nok_middlename?.toUpperCase() +
                         ' ' +
                         profile?.nok_surname?.toUpperCase()}
                     </Text>
