@@ -53,7 +53,7 @@ const Login = ({ navigation }: any) => {
   const [modalLoginErrorVisible, setModalLoginErrorVisible] = useState<boolean>(false);
   const [loginResponseData, setLoginResponseData] = useState<any>({});
 
-  const pinRegex = /^(?i)PEN\d{12}$/;
+  const pinRegex = /^PEN\d{12}$/i;
   const passwordRegex = /^(?=.*\d).{8,}$/;
 
   const dispatch: any = useDispatch();
@@ -170,8 +170,8 @@ const Login = ({ navigation }: any) => {
                 <CustomInput
                   placeholder={'PIN'}
                   onChangeText={(text: string) => {
-                    setPinValue(text);
-                    dispatch(setLoginPin(text));
+                    setPinValue(text.toUpperCase());
+                    dispatch(setLoginPin(text.toUpperCase()));
                   }}
                   autoCapitalize="none"
                   onFocus={() => handleError(null, 'pinValue')}
