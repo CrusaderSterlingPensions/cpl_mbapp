@@ -53,7 +53,7 @@ const Login = ({ navigation }: any) => {
   const [modalLoginErrorVisible, setModalLoginErrorVisible] = useState<boolean>(false);
   const [loginResponseData, setLoginResponseData] = useState<any>({});
 
-  const pinRegex = /^PEN\d{12}$/;
+  const pinRegex = /^(?i)PEN\d{12}$/;
   const passwordRegex = /^(?=.*\d).{8,}$/;
 
   const dispatch: any = useDispatch();
