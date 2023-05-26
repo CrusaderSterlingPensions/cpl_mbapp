@@ -170,8 +170,8 @@ const Login = ({ navigation }: any) => {
                 <CustomInput
                   placeholder={'PIN'}
                   onChangeText={(text: string) => {
-                    setPinValue(text.toUpperCase());
-                    dispatch(setLoginPin(text.toUpperCase()));
+                    setPinValue(text);
+                    dispatch(setLoginPin(text));
                   }}
                   autoCapitalize="none"
                   onFocus={() => handleError(null, 'pinValue')}
