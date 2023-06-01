@@ -18,11 +18,11 @@ const History = ({ transactionData }: any) => {
 
   const Transaction = ({ period, rsa, avc }: transactionProps) => {
     const dateFormatter = (dateString: string) => {
-      const dateParts = dateString.split('-');
+      const dateParts = dateString?.split('-');
       const year = dateParts[0];
       const month = parseInt(dateParts[1], 10) - 1; // Subtract 1 to convert to zero-based index
       const date = new Date(Number(year), month);
-      const formattedDate = date.toLocaleDateString('en-US', {
+      const formattedDate = date?.toLocaleDateString('en-US', {
         month: 'long',
         year: 'numeric',
       });

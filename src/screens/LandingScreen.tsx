@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     width: 50,
   },
   container: {
-    flexDirection: 'column',
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
     height: '100%',
