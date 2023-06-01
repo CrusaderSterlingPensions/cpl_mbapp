@@ -128,7 +128,7 @@ const Login = ({ navigation }: any) => {
       style={{
         height: SIZES.height,
         backgroundColor: 'white',
-        flex: 1
+        flex: 1,
       }}
     >
       <ImageBackground
@@ -149,7 +149,11 @@ const Login = ({ navigation }: any) => {
             <ModalScreen
               icon={<MaterialIcons name="error-outline" size={40} color={COLORS.NEUTRAL.ACCENT} />}
               titleLabel={'Error'}
-              message={loginResponseData.payload?.message}
+              message={
+                loginResponseData.payload?.message === 'Customer Firsttime User'
+                  ? 'First time User..., Kindly Register a Mobile Account'
+                  : loginResponseData.payload?.message
+              }
               modalVisible={modalLoginErrorVisible}
               setModalVisible={setModalLoginErrorVisible}
               buttonLabelTwo={'Retry'}
