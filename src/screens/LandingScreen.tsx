@@ -30,7 +30,7 @@ const LandingScreen = ({ navigation, onFinish }: any) => {
     };
   }, []);
   return (
-    <View style={{ height: SIZES.height }}>
+    <View >
       <StatusBar style="light" />
       <View
         style={{

@@ -124,7 +124,7 @@ const SetPassword = ({ navigation }: any) => {
   return (
     <View
       style={{
-        height: SIZES.height,
+        flex: 1,
       }}
     >
       <StatusBar translucent style="light" />
@@ -136,7 +136,7 @@ const SetPassword = ({ navigation }: any) => {
         <LinearGradient
           colors={[COLORS.NEUTRAL.TRANSPARENT20, COLORS.NEUTRAL.TRANSPARENT80]}
           style={{
-            height: SIZES.height,
+            flex: 1,
             width: SIZES.width,
           }}
         >
