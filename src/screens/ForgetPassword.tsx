@@ -50,7 +50,7 @@ const ForgetPassword = ({ navigation }: any) => {
   const [modalOTPErrorVisible, setModalOTPErrorVisible] = useState<boolean>(false);
   const [responseData, setResponseData] = useState<any>({});
 
-  const pinRegex = /^PEN\d{12}$/;
+  const pinRegex = /^PEN\d{12}$/i;
   const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_])(?=.{8,})/;
 
   const dispatch: any = useDispatch();
