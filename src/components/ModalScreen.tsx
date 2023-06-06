@@ -46,6 +46,7 @@ const ModalScreen = ({
       onRequestClose={() => {
         setModalVisible(!modalVisible);
       }}
+      statusBarTranslucent={true}
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>

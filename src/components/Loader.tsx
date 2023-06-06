@@ -12,6 +12,7 @@ const Loader = ({ loading }: any) => {
       onRequestClose={() => {
         console.log('close modal');
       }}
+      statusBarTranslucent={true}
     >
       <View style={styles.modalBackground}>
         {/* <View style={styles.activityIndicatorWrapper}>
