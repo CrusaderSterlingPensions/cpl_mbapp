@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "crusader",
+    "name": "CrusaderSterling Pension",
     "slug": "cpl_mbapp",
-    "version": "1.0.0",
+    "version": "3.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.crusader.crusader"
+      "package": "com.pensions.crusader"
     },
     "web": {
       "favicon": "./assets/favicon.png"
