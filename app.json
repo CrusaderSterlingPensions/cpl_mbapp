@@ -9,19 +9,19 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#BC3339"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.crusader.crusader"
+      "bundleIdentifier": "com.pensions.crusader"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#BC3339"
       },
       "package": "com.pensions.crusader"
     },
@@ -30,8 +30,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "1e17304b-de33-465a-8bf2-9863fc3346f4"
+        "projectId": "807541f7-f06d-4309-9b9d-8daf7dae2405"
       }
-    }
+    },
+    "owner": "glosskode"
   }
 }
