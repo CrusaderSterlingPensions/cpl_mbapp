@@ -23,7 +23,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#BC3339"
       },
-      "package": "com.pensions.crusader"
+      "package": "com.pensions.crusader",
+      "versionCode":14
+      
     },
     "web": {
       "favicon": "./assets/favicon.png"
