@@ -18,8 +18,6 @@ const DashBoard = () => {
   const profileData = userData[1];
   const transactionData = userData[2];
 
-  console.log('Dashboard is still rendering, and it is too bad');
-
   // useEffect(() => {
   //   dispatch(userLogin({ pin: 'loginPin', password: loginPassword }));
   // }, []);
