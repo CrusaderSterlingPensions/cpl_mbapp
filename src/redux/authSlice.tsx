@@ -29,6 +29,8 @@ let initialState: stateProp = {
   error: '',
   errorMessage: {},
   userData: null,
+  checked: false,
+  rememberLogInDetails: null,
 };
 
 async function fetchWithTimeout(resource: string, options: any = {}) {
@@ -279,6 +281,15 @@ const authSlice = createSlice({
       state.isLoggedIn = null;
       SecureStore.deleteItemAsync('isLoggedIn');
     },
+    handleCheck: (state, action) => {
+      state.checked = action.payload;
+    },
+    setRememberLogInDetails: (state, action) => {
+      state.rememberLogInDetails = action.payload;
+    },
+    clearRememberLogInDetails: async (state) => {
+      state.rememberLogInDetails = '';
+    },
   },
   extraReducers(builder) {
     builder
@@ -317,7 +328,6 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(resetPassword.fulfilled, (state, action: any) => {
-        console.log('Reset Password Fullfilled', action.payload);
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
@@ -332,7 +342,6 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(userLogin.fulfilled, (state, action) => {
-        console.log('State is fullfilled', action.payload);
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
@@ -341,7 +350,6 @@ const authSlice = createSlice({
         SecureStore.setItemAsync('isLoggedIn', 'loggedIn');
       })
       .addCase(userLogin.rejected, (state, action: any) => {
-        console.log('error message obtained from fetch', action.payload);
         state.isLoading = false;
         state.isSuccess = false;
         state.isError = true;
@@ -352,7 +360,6 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(forgetPassword.fulfilled, (state, action) => {
-        console.log('=================gorget Pass action', action.payload);
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
@@ -368,6 +375,13 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearState, logout, login } = authSlice.actions;
+export const {
+  clearState,
+  logout,
+  login,
+  handleCheck,
+  clearRememberLogInDetails,
+  setRememberLogInDetails,
+} = authSlice.actions;
 export const authSelector = (state: stateProp) => state.auth;
 export default authSlice.reducer;
