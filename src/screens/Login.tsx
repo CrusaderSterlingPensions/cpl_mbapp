@@ -28,8 +28,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import { landingPageBackgroundImage, loginPageBackgroundImage } from '../global/images';
 import { FontAwesome5, Entypo, EvilIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
-import { authSelector, clearState, userLogin } from '../redux/authSlice';
+import {
+  authSelector,
+  clearRememberLogInDetails,
+  clearState,
+  handleCheck,
+  setRememberLogInDetails,
+  userLogin,
+} from '../redux/authSlice';
 import { setLoginPassword, setLoginPin, userSelector } from '../redux/userSlice';
+import Checkbox from 'expo-checkbox';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 // import Constants from 'expo-constants';
 
 const Login = ({ navigation }: any) => {
@@ -42,7 +52,7 @@ const Login = ({ navigation }: any) => {
   };
 
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [pinValue, setPinValue] = useState<string>('');
+  const [pinValue, setPinValue] = useState<any>('');
   const [errors, setErrors] = useState<errorObjProps>({});
   const [password, setPassword] = useState<string>('');
   const [isChecked, setChecked] = useState<boolean>(false);
@@ -57,26 +67,79 @@ const Login = ({ navigation }: any) => {
   const passwordRegex = /^(?=.*\d).{8,}$/;
 
   const dispatch: any = useDispatch();
-  const { isError, isSuccess, isLoading, error } = useSelector(authSelector);
+  const { isError, isSuccess, isLoading, error, checked } = useSelector(authSelector);
   const { loginPin, loginPassword } = useSelector(userSelector);
+
+  // const pin = SecureStore.getItemAsync('rememberPin');
+  const getPin = async () => {
+    const check = await AsyncStorage.getItem('rememberCheckBox');
+    return check;
+  };
 
   useEffect(() => {
     dispatch(clearState());
-    setPinValue('');
+
+    getRememberedEmail();
+
+    // setPinValue('');
     setPassword('');
   }, []);
 
-  console.log('activity is going on============================');
+  const saveEmail = async (pin: string) => {
+    try {
+      await AsyncStorage.setItem('rememberedEmail', pin);
+      await AsyncStorage.setItem('checked', 'true');
+    } catch (error) {
+      console.log('Error saving email:', error);
+    }
+  };
+
+  const getRememberedEmail = () => {
+    AsyncStorage.getItem('rememberedEmail')
+      .then((email) => {
+        if (email) {
+          console.log('Email', email);
+          setPinValue(email);
+        }
+      })
+      .catch((error) => {
+        console.log('Error retrieving email:', error);
+      });
+    AsyncStorage.getItem('checked')
+      .then((isChecked) => {
+        if (isChecked) {
+          console.log('isChecked', isChecked);
+          setChecked(isChecked === 'true' ? true : false);
+        }
+      })
+      .catch((error) => {
+        console.log('Error retrieving email:', error);
+      });
+  };
+
+  // Call getRememberedEmail in your app's startup logic
+
+  const clearRememberedEmail = async () => {
+    AsyncStorage.removeItem('rememberedEmail')
+      .then(() => {
+        setPinValue('');
+      })
+      .catch((error) => {
+        console.log('Error removing PIN:', error);
+      });
+    AsyncStorage.removeItem('checked')
+      .then(() => {
+        setChecked(false);
+      })
+      .catch((error) => {
+        console.log('Error removing PIN:', error);
+      });
+  };
 
   // useEffect(() => {
-  //   if (isSuccess) {
-  //     navigation.navigate('DrawerMenu');
-  //   }
-
-  //   if (isError) {
-  //     setModalOTPErrorVisible(true);
-  //   }
-  // }, [isSuccess, isError]);
+  //   dispatch(clearState());
+  //   console.log(isChecked);
+  // }, [checked]);
 
   const validate = async () => {
     Keyboard.dismiss();
@@ -103,7 +166,6 @@ const Login = ({ navigation }: any) => {
 
   const handleLogin = async () => {
     const response = await dispatch(userLogin({ username: pinValue, password: password }));
-    console.log('Login Response', response);
     setLoginResponseData(response);
     if (response?.meta?.requestStatus === 'fulfilled') {
       navigation.replace('DrawerMenu');
@@ -182,6 +244,7 @@ const Login = ({ navigation }: any) => {
                   onFocus={() => handleError(null, 'pinValue')}
                   error={errors.pinValue}
                   editable={true}
+                  value={pinValue}
                 />
 
                 <CustomInput
@@ -198,16 +261,35 @@ const Login = ({ navigation }: any) => {
                   customTextStyle={{ width: '90%' }}
                 />
 
-                <TextLinks
-                  label="Forget Password?"
-                  onPress={() => {
-                    navigation.replace('ForgetPassword');
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignContent: 'center',
+                    justifyContent: 'space-between',
                   }}
-                  linkContainerStyles={{
-                    justifyContent: 'flex-end',
-                    marginTop: moderateScale(10),
-                  }}
-                />
+                >
+                  <View style={styles.rememberMeWrapper}>
+                    <Checkbox
+                      value={isChecked}
+                      onValueChange={(value) => {
+                        setChecked(value);
+                        value === true ? saveEmail(pinValue) : clearRememberedEmail();
+                      }}
+                      color={COLORS.NEUTRAL.ACCENT}
+                    />
+                    <Text style={styles.rememberMe}>Remember Me</Text>
+                  </View>
+                  <TextLinks
+                    label="Forget Password?"
+                    onPress={() => {
+                      navigation.replace('ForgetPassword');
+                    }}
+                    linkContainerStyles={{
+                      justifyContent: 'flex-end',
+                      marginTop: moderateScale(10),
+                    }}
+                  />
+                </View>
 
                 <Button
                   onPress={() => validate()}
@@ -314,4 +396,15 @@ const styles = StyleSheet.create({
   },
   lowerSection: {},
   upperSection: {},
+  rememberMeWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginTop: moderateScale(10),
+  },
+  rememberMe: {
+    ...FONTS.body4Regular,
+    color: COLORS.NEUTRAL.WHITE,
+    marginLeft: moderateScale(8),
+  },
 });
