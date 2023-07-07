@@ -187,14 +187,14 @@ const OpenAccount = ({ navigation }: any) => {
                     error={errors.pinValue}
                     editable={true}
                   />
-                  <CustomInput
+                  {/* <CustomInput
                     placeholder={'Email'}
                     onChangeText={(text: string) => setEmail(text)}
                     autoCapitalize="none"
                     onFocus={() => handleError(null, 'email')}
                     error={errors.email}
                     editable={true}
-                  />
+                  /> */}
                   <CustomInput
                     placeholder={'Phone Number'}
                     onChangeText={(text: string) => setPhoneNumber(text)}
