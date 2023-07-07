@@ -26,50 +26,6 @@ let initialState: stateProp = {
   profile: {},
 };
 
-// async function fetchWithTimeout(resource: string, options: any = {}) {
-//   const { timeout = 5000 } = options;
-
-//   const abortController = new AbortController();
-//   const id = setTimeout(() => abortController.abort(), timeout);
-//   const response = await fetch(resource, {
-//     ...options,
-//     signal: abortController.signal,
-//   });
-//   clearTimeout(id);
-//   return response;
-// }
-
-// export const updateUserById = createAsyncThunk(
-//   'user/updateUserById',
-//   async ({ userData, id }: userProps, thunkAPI) => {
-//     console.log(userData, '*********idCalled**************');
-//     try {
-//       const response = await fetchWithTimeout(`${REACT_APP_BASE_URL}/users/${id}`, {
-//         method: 'PATCH',
-//         headers: {
-//           Accept: 'application/json',
-//           'Content-Type': 'application/json',
-//           Authorization: await SecureStore.getItemAsync('token'),
-//         },
-//         body: JSON.stringify({
-//           ...userData,
-//         }),
-//       });
-
-//       let data = await response.json();
-
-//       if (response.ok) {
-//         return data;
-//       } else {
-//         return thunkAPI.rejectWithValue(data);
-//       }
-//     } catch (error: any) {
-//       console.log('Error', error);
-//       return thunkAPI.rejectWithValue(error);
-//     }
-//   }
-// );
-
 export const fetchCurrentUser = createAsyncThunk('user/fetchCurrentUser', async () => {
   try {
     const response = await fetch('http://localhost:3000/profile');
