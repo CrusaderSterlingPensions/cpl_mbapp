@@ -6,22 +6,25 @@ import { Image } from 'react-native';
 import { nairaLogoWhite } from '../global/images';
 import { Balances, History, Prices } from './fragments';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCurrentUser } from '../redux/userSlice';
+import { fetchCurrentUser, userSelector } from '../redux/userSlice';
 import { data } from '../global';
 import { StatusBar } from 'expo-status-bar';
-import { Button, DatePicker } from '../components';
+import { Button, DatePicker, Loader, ModalScreen } from '../components';
 import moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
 import { nanoid } from '@reduxjs/toolkit';
+import { authSelector } from '../redux/authSlice';
+import { clearDatesDetails, requestStatement, servicesSelector } from '../redux/servicesSlices';
+import { FontAwesome5, Entypo, EvilIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 const StatementRequest = ({ navigation }: any) => {
   const dispatch: any = useDispatch();
-  const { profile } = data;
-  const profileData = profile[0];
+  const { userData } = useSelector(authSelector);
+  const { isServicesLoading, isServicesError, isServicesSuccess } = useSelector(servicesSelector);
 
-  const [startDate, setStartDate] = useState<any>(new Date());
+  const [startDate, setStartDate] = useState<any>(new Date(2023, 0, 1));
   const [endDate, setEndDate] = useState<any>(new Date());
-  const [startDateValue, setStartDateValue] = useState<any>(moment().format('L'));
+  const [startDateValue, setStartDateValue] = useState<any>(moment('2023-01-01').format('L'));
   const [endDateValue, setEndDateValue] = useState<any>(moment().format('L'));
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState<boolean>(false);
@@ -29,6 +32,9 @@ const StatementRequest = ({ navigation }: any) => {
   const [fundType, setFundType] = useState<any>('');
   const [errors, setErrors] = useState<any>({});
   const [isValid, setIsValid] = useState<boolean>(false);
+  const [statementResponseData, setStatementResponseData] = useState<any>({});
+  const [statementModalSuccess, setStatementModalSuccess] = useState<boolean>(false);
+  const [statementModalError, setStatementModalError] = useState<boolean>(false);
 
   const fundTypeData: any[] = [
     { id: nanoid(12), label: 'Fund I', value: '1' },
@@ -40,12 +46,24 @@ const StatementRequest = ({ navigation }: any) => {
   const validate = async () => {
     Keyboard.dismiss();
     setIsValid(true);
-    if (!fundType) {
-      handleError('Please select Fund Type', 'fundType');
-      setIsValid(false);
-    }
+    // if (!fundType) {
+    //   handleError('Please select Fund Type', 'fundType');
+    //   setIsValid(false);
+    // }
     if (isValid) {
-      alert('Statement Requested Successfully');
+      console.log('Statement Requested Successfully');
+      const params = {
+        pin: userData[1].pin,
+        startDate: moment(startDate).format('YYYY-MM-DD'),
+        endDate: moment(endDate).format('YYYY-MM-DD'),
+      };
+      const response = await dispatch(requestStatement(params));
+      setStatementResponseData(response);
+      if (response?.meta?.requestStatus === 'fulfilled') {
+        setStatementModalSuccess(true);
+      } else if (response?.meta?.requestStatus === 'rejected') {
+        setStatementModalError(true);
+      }
     }
   };
 
@@ -53,10 +71,49 @@ const StatementRequest = ({ navigation }: any) => {
     setErrors((prevState: any) => ({ ...prevState, [input]: error }));
   };
 
+  console.log(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" translucent />
+      <Loader loading={false} />
+      <ModalScreen
+        icon={
+          <Ionicons name="checkmark-done-circle-outline" size={40} color={COLORS.NEUTRAL.GRAY} />
+        }
+        titleLabel={'Success'}
+        message={statementResponseData.payload?.message}
+        modalVisible={statementModalSuccess}
+        setModalVisible={setStatementModalSuccess}
+        buttonLabelTwo={'Proceed'}
+        buttonOneOnPress={() => {}}
+        buttonTwoOnPress={() => {
+          dispatch(clearDatesDetails());
+          setStartDateValue(moment('2023-01-01').format('L'));
+          setEndDateValue(moment().format('L'));
+          setStartDate(new Date(2023, 0, 1));
+          setEndDate(new Date());
+          setStatementModalSuccess(!statementModalSuccess);
+        }}
+      />
+      <ModalScreen
+        icon={<MaterialIcons name="error-outline" size={40} color={COLORS.NEUTRAL.ACCENT} />}
+        titleLabel={'Error'}
+        message="Error Sending Statement to email, Please try again."
+        modalVisible={statementModalError}
+        setModalVisible={setStatementModalError}
+        buttonLabelTwo={'Retry'}
+        buttonOneOnPress={() => {}}
+        buttonTwoOnPress={() => {
+          setStatementModalError(!statementModalError);
+          dispatch(clearDatesDetails());
+        }}
+      />
       <View style={styles.dateSectionContainer}>
+        <Text
+          style={styles.pin}
+        >{`${userData[1].pin} (${userData[1].first_name} ${userData[1].surname})`}</Text>
+        <Text style={styles.pin}>FUND ID: {userData[1].fund_id}</Text>
         <DatePicker
           date={startDate}
           setDate={setStartDate}
@@ -76,7 +133,7 @@ const StatementRequest = ({ navigation }: any) => {
           label={'Select end Date'}
         />
       </View>
-      <View style={styles.dropdownWrapper}>
+      {/* <View style={styles.dropdownWrapper}>
         <Text style={{ ...FONTS.body3Bold }}>Select Fund Type</Text>
         <Dropdown
           style={[
@@ -113,7 +170,7 @@ const StatementRequest = ({ navigation }: any) => {
         {!fundType && errors.fundType && (
           <Text style={{ ...styles.errorMessage }}>{errors.fundType}</Text>
         )}
-      </View>
+      </View> */}
       <Button
         onPress={() => validate()}
         text={'Submit'}
@@ -151,5 +208,9 @@ const styles = StyleSheet.create({
     color: COLORS.ERROR.NORMAL,
     marginTop: verticalScale(3),
     marginBottom: verticalScale(5),
+  },
+  pin: {
+    ...FONTS.body4Bold,
+    marginBottom: 10,
   },
 });
