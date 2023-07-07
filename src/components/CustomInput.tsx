@@ -111,7 +111,7 @@ export const DatePicker = ({
             setDateValue(moment(value).format('DD/MM/YYYY'));
           }}
           value={date}
-          maximumDate={new Date()}
+          // maximumDate={new Date()}
         />
       )}
     </View>
