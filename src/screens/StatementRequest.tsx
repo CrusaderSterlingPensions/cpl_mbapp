@@ -35,6 +35,7 @@ const StatementRequest = ({ navigation }: any) => {
   const [statementResponseData, setStatementResponseData] = useState<any>({});
   const [statementModalSuccess, setStatementModalSuccess] = useState<boolean>(false);
   const [statementModalError, setStatementModalError] = useState<boolean>(false);
+  const [dataLoading, setDataLoading] = useState<boolean>(false);
 
   const fundTypeData: any[] = [
     { id: nanoid(12), label: 'Fund I', value: '1' },
@@ -43,25 +44,30 @@ const StatementRequest = ({ navigation }: any) => {
     { id: nanoid(12), label: 'Fund IV', value: '4' },
   ];
 
+  useEffect(() => {
+    dispatch(clearDatesDetails);
+    setDataLoading(false);
+  }, []);
+
   const validate = async () => {
     Keyboard.dismiss();
-    setIsValid(true);
-    // if (!fundType) {
-    //   handleError('Please select Fund Type', 'fundType');
-    //   setIsValid(false);
-    // }
-    if (isValid) {
-      console.log('Statement Requested Successfully');
+    console.log(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
+
+    if (startDate && endDate) {
+      console.log('Data Validated');
       const params = {
         pin: userData[1].pin,
         startDate: moment(startDate).format('YYYY-MM-DD'),
         endDate: moment(endDate).format('YYYY-MM-DD'),
       };
+      setDataLoading(true);
       const response = await dispatch(requestStatement(params));
-      setStatementResponseData(response);
       if (response?.meta?.requestStatus === 'fulfilled') {
+        setStatementResponseData(response);
+        setDataLoading(false);
         setStatementModalSuccess(true);
       } else if (response?.meta?.requestStatus === 'rejected') {
+        setDataLoading(false);
         setStatementModalError(true);
       }
     }
@@ -71,12 +77,13 @@ const StatementRequest = ({ navigation }: any) => {
     setErrors((prevState: any) => ({ ...prevState, [input]: error }));
   };
 
-  console.log(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
+  const maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() + 1);
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" translucent />
-      <Loader loading={false} />
+      <Loader loading={dataLoading} />
       <ModalScreen
         icon={
           <Ionicons name="checkmark-done-circle-outline" size={40} color={COLORS.NEUTRAL.GRAY} />
@@ -113,7 +120,7 @@ const StatementRequest = ({ navigation }: any) => {
         <Text
           style={styles.pin}
         >{`${userData[1].pin} (${userData[1].first_name} ${userData[1].surname})`}</Text>
-        <Text style={styles.pin}>FUND ID: {userData[1].fund_id}</Text>
+        <Text style={styles.pin}>FUND TYPE: {userData[1].fund_id}</Text>
         <DatePicker
           date={startDate}
           setDate={setStartDate}
@@ -122,6 +129,7 @@ const StatementRequest = ({ navigation }: any) => {
           dateValue={startDateValue}
           setDateValue={setStartDateValue}
           label={'Select Start Date'}
+          maxDate={new Date()}
         />
         <DatePicker
           date={endDate}
@@ -131,6 +139,7 @@ const StatementRequest = ({ navigation }: any) => {
           dateValue={endDateValue}
           setDateValue={setEndDateValue}
           label={'Select end Date'}
+          maxDate={maxDate}
         />
       </View>
       {/* <View style={styles.dropdownWrapper}>
