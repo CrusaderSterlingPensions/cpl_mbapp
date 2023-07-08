@@ -36,6 +36,7 @@ import MandateChange from './MandateChange';
 import { data } from '../global';
 import { StatusBar } from 'expo-status-bar';
 import { authSelector, clearState } from '../redux/authSlice';
+import * as WebBrowser from 'expo-web-browser';
 
 const Drawer = createDrawerNavigator();
 
@@ -48,11 +49,7 @@ const CustomDrawer = (props: any) => {
 
   const OpenLink = ({ label, link }: any) => {
     const handleOpenLink = async (url: any) => {
-      try {
-        await Linking.openURL(url);
-      } catch (err) {
-        console.error(err);
-      }
+      await WebBrowser.openBrowserAsync(url);
     };
     return (
       <TouchableOpacity
@@ -129,16 +126,17 @@ const CustomDrawer = (props: any) => {
         >
           <OpenLink
             label={'Data Recapture'}
-            link={'https://bentracker.crusaderpensions.com/recapweb/'}
+            link={'https://crusaderpensions.com/contact-us/data-recapture-form/'}
+          />
+          <OpenLink
+            label={'Micro Pensions'}
+            link={'https://crusaderpensions.com/services/micro-pensions/'}
           />
           <OpenLink
             label={'Privacy Policy'}
             link={'https://www.crusaderpensions.com/data-privacy-policy/'}
           />
-          <OpenLink
-            label={'Mandate Change'}
-            link={'https://www.crusaderpensions.com/data-privacy-policy/'}
-          />
+          <OpenLink label={'Mandate Change'} link={'https://crusaderpensions.com/faq/'} />
         </View>
       </DrawerContentScrollView>
 
