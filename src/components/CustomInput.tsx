@@ -49,6 +49,7 @@ export const DatePicker = ({
   setDateValue,
   label,
   error,
+  maxDate,
 }: any) => {
   return (
     <View
@@ -98,7 +99,7 @@ export const DatePicker = ({
               setDateValue(moment(value).format('DD/MM/YYYY'));
             }}
             value={date}
-            maximumDate={new Date()}
+            maximumDate={maxDate}
           />
         )
       ) : (
@@ -111,7 +112,7 @@ export const DatePicker = ({
             setDateValue(moment(value).format('DD/MM/YYYY'));
           }}
           value={date}
-          // maximumDate={new Date()}
+          maximumDate={maxDate}
         />
       )}
     </View>
@@ -177,7 +178,9 @@ const CustomInput = ({
           multiline={multiline}
           numberOfLines={numberOfLines}
           style={
-            multiline
+            props.dark
+              ? { ...styles.inputSec, ...customTextStyle, color: COLORS.NEUTRAL.DARK }
+              : multiline
               ? { ...styles.inputSec, height: moderateScale(100), ...customTextStyle }
               : { ...styles.inputSec, ...customTextStyle }
           }
