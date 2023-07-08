@@ -4,11 +4,16 @@ import { COLORS, SIZES } from '../global';
 import { moderateScale } from 'react-native-size-matters';
 import { avcBanner, glfBanner, raBanner, rsaBanner } from '../global/images';
 import { StatusBar } from 'expo-status-bar';
+import * as WebBrowser from 'expo-web-browser';
 
 const ProductCatalogue = ({ navigation }: any) => {
-  const BannerDetails = ({ source }: any) => {
+  // const handleOpenLink = () => {
+  //   Linking.openURL('https://example.com');
+  // };
+
+  const BannerDetails = ({ source, link }: any) => {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => WebBrowser.openBrowserAsync(link)}>
         <Image source={source} resizeMode="contain" style={{ width: SIZES.width, height: 120 }} />
       </TouchableOpacity>
     );
@@ -25,10 +30,22 @@ const ProductCatalogue = ({ navigation }: any) => {
           paddingBottom: moderateScale(20),
         }}
       >
-        <BannerDetails source={avcBanner} />
-        <BannerDetails source={rsaBanner} />
-        <BannerDetails source={raBanner} />
-        <BannerDetails source={glfBanner} />
+        <BannerDetails
+          source={avcBanner}
+          link="https://crusaderpensions.com/services/voluntary-contributions/"
+        />
+        <BannerDetails
+          source={rsaBanner}
+          link="https://crusaderpensions.com/services/retirement-saving/"
+        />
+        <BannerDetails
+          source={raBanner}
+          link="https://crusaderpensions.com/services/retiree-account/"
+        />
+        <BannerDetails
+          source={glfBanner}
+          link="https://crusaderpensions.com/services/gratuity-legal-funds/"
+        />
       </View>
     </View>
   );
