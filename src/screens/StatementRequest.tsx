@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
   },
   dateSectionContainer: {
     marginBottom: moderateScale(20),
+    marginTop: moderateScale(10),
   },
   dropdown: {
     height: moderateScale(50),
