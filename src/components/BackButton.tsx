@@ -24,7 +24,7 @@ export default BackButton;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: moderateScale(10),
+    // paddingHorizontal: moderateScale(10),
     marginTop: 5,
     marginLeft: moderateScale(10),
     flexDirection: 'row',
