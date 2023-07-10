@@ -2,7 +2,7 @@
   "expo": {
     "name": "Crusader",
     "slug": "cpl_mbapp",
-    "version": "3.2.1",
+    "version": "3.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon2.png",
     "userInterfaceStyle": "light",
