@@ -1,19 +1,17 @@
 {
   "expo": {
-    "name": "CrusaderSterling Pension",
+    "name": "Crusader",
     "slug": "cpl_mbapp",
-    "version": "2.1.4",
+    "version": "3.2.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon2.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#BC3339"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.pensions.crusader"
@@ -24,8 +22,7 @@
         "backgroundColor": "#BC3339"
       },
       "package": "com.pensions.crusader",
-      "versionCode":14
-      
+      "versionCode": 14
     },
     "web": {
       "favicon": "./assets/favicon.png"
